@@ -23,9 +23,8 @@ library(pheatmap)
 library(apeglm)
 
 # 2-ouverture des fichier----
-setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid/data") #folder data
 rm(list = ls())
-load("1.2_mat_pat_clean.rds") #ouverture de la svg
+load("data/1.2_mat_pat_clean.rds") #ouverture de la svg
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
 
 # 3- HVG avec Scran----
@@ -46,11 +45,6 @@ curve(metadata(dec)$trend(x), col="blue", add=TRUE)
 
 # 5-Svg fichier ----
 
-save(top.hvgs, file = "HVG_scran.rds") # svg des HVG
-load("HVG_scran.rds") #ouverture de la svg
+save(top.hvgs, file = "data/HVG_scran.rds") # svg des HVG
+load("data/HVG_scran.rds") #ouverture de la svg
 
-
-
-
-plot1 <- plot(dec$mean, dec$total, xlab="Mean log-expression", ylab="Variance", main = " highly Variable Genes Scran")
-curve(metadata(dec)$trend(x), col="blue", add=TRUE)

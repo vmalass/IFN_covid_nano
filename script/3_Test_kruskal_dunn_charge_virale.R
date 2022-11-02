@@ -5,6 +5,8 @@ library(dplyr)
 library(ggpubr)
 library(rstatix)
 
+rm(list = ls())
+
 data<- read.xlsx("data/charge_virale_groupe.xlsx")
 
 data %>% sample_n_by(Groupe, size = 1)
@@ -34,9 +36,7 @@ print(ggboxplot(data, x = "Groupe", y = 'charge_virale') +
         stat_pvalue_manual(pwc, hide.ns = TRUE) +
         labs(
           subtitle = get_test_label(res.kruskal, detailed = TRUE),
-          caption = get_pwc_label(pwc)
-        ) ) 
-}
+          caption = get_pwc_label(pwc))) 
 
 ### Avec data log 10 / 1 000 000 copie
 rm(list = ls())
@@ -70,6 +70,4 @@ print(ggboxplot(data, x = "Groupe", y = 'charge_virale_log10') +
         stat_pvalue_manual(pwc, hide.ns = TRUE) +
         labs(
           subtitle = get_test_label(res.kruskal, detailed = TRUE),
-          caption = get_pwc_label(pwc)
-        ) ) 
-}
+          caption = get_pwc_label(pwc)))

@@ -5,7 +5,6 @@ library(ggpubr)
 library(rstatix)
 
 # import datat----
-setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid")
 rm(list = ls())
 data <- read.xlsx("data/titre_virale_IFI27_Ac.xlsx", sheet = 4)
 data_months <- read.xlsx("data/titre_virale_IFI27_Ac.xlsx", sheet = 5)
@@ -645,7 +644,7 @@ fried$real_time_point<-as.factor(fried$real_time_point)
 res.fried <- fried %>% friedman_test(Vidas_N ~ real_time_point |Groupe  )
 res.fried
 
-write.xlsx(fried, "data_victor_friedman.xlsx")
+write.xlsx(fried, "result/data_victor_friedman.xlsx")
 
 
 

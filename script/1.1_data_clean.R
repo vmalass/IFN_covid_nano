@@ -23,10 +23,10 @@ library(pheatmap)
 library(apeglm)
 
 # 2-Preparation des data -----
-setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid/data") #folder data
+#setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid/data") #folder data
 rm(list = ls())
-seuratObj<-readRDS(file = "seuratObj.rds")
-MetaData_sans_Hcov <- read.xlsx("METADATA_sans_Hcov.xlsx", colNames = T, rowNames = T)
+seuratObj<-readRDS(file = "data/seuratObj.rds")
+MetaData_sans_Hcov <- read.xlsx("data/METADATA_sans_Hcov.xlsx", colNames = T, rowNames = T)
 mat_pat_gene_count <- t(seuratObj@assays[["RNA"]]@data) #sélection des data count dans le seurat obj
 mat_pat_gene_count<- as.data.frame(mat_pat_gene_count) #transformation en data frame
 mat_pat_gene_count<- arrange(mat_pat_gene_count, row.names(mat_pat_gene_count)) #ordo en fonction du nom des ligne
@@ -68,5 +68,5 @@ mat_pat_clean$real_time_point <- as.factor(mat_pat_clean$real_time_point)  #tran
 mat_pat_clean <- arrange(mat_pat_clean, real_time_point) # tris en fct des real time point
 
 # 4- Svg fichier ----
-save(mat_pat_clean, file = "1.1_mat_pat_clean.rds") #svg du data
-load("1.1_mat_pat_clean.rds") #ouverture de la svg
+save(mat_pat_clean, file = "data/1.1_mat_pat_clean.rds") #svg du data
+load("data/1.1_mat_pat_clean.rds") #ouverture de la svg

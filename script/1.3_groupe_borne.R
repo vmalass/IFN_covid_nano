@@ -23,9 +23,8 @@ library(pheatmap)
 library(apeglm)
 
 # 2-ouverture des fichier----
-setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid/data") #folder data
 rm(list = ls())
-load("1.1_mat_pat_clean.rds") #ouverture de la svg
+load("data/1.1_mat_pat_clean.rds") #ouverture de la svg
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
 
 # 3-Bornage VT1----
@@ -52,7 +51,16 @@ numgp_RP <- groupe_RP_autre$numero_patient
 GP3 <- mat_pat_clean_sans_R_T$numero_patient %in% numgp_RP
 GP3 <- mat_pat_clean_sans_R_T[GP3==F,]
 
-ggplot(data = GP3, aes_string(x="jours_prelevement", y= "RSAD2", color = "numero_patient ", group = "numero_patient"))+ geom_line() + geom_point() + ggtitle("Patients NR avec borne J1 à J5 sur le gène RSAD2")+scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x)))
+ggplot(data = GP3, 
+       aes_string(x="jours_prelevement", 
+                              y= "RSAD2",
+                              color = "numero_patient ",
+                              group = "numero_patient")) + 
+  geom_line() + 
+  geom_point() + 
+  ggtitle("Patients NR avec borne J1 à J5 sur le gène RSAD2") +
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))
 
 YY <- as.character(num_pat_J1)
 
@@ -62,7 +70,16 @@ couleur_patient <- mat_pat_clean_sans_R_T$numero_patient %in% YY
 couleur_patient
 GP5<- cbind(mat_pat_clean_sans_R_T, couleur_patient)
 
-ggplot(data = GP5, aes_string(x="jours_prelevement", y= "RSAD2", color = "couleur_patient ", group = "numero_patient"))+ geom_line() + geom_point() + ggtitle("Patients NR avec borne J1 à J5 sur le gène RSAD2")+scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x), labels = trans_format("log10", math_format(10^.x)))
+ggplot(data = GP5, 
+       aes_string(x="jours_prelevement", 
+                  y= "RSAD2", 
+                  color = "couleur_patient ", 
+                  group = "numero_patient")) + 
+  geom_line() + 
+  geom_point() + 
+  ggtitle("Patients NR avec borne J1 à J5 sur le gène RSAD2") +
+  scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x)))
 
 
 ## 3.2-bornage VT1 / CXCL10 / real_time_point -----
@@ -221,3 +238,4 @@ ggplot(data = GP5, aes_string(x="jours_prelevement", y= "IFI27", color = "couleu
 # Pour VT1 et VT2 on selectionne tout les patients qui ressorte au moins dans deux gènes pour les attribuer aux groupes NR & RP
 # NR 13 / 49 / 50 / 62
 # RP 4 / 6 / 10 / 15 / 21 / 26 / 29 / 48 / 61
+

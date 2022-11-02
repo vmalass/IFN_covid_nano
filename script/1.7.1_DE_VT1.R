@@ -23,11 +23,10 @@ library(pheatmap)
 library(apeglm)
 
 # 2-ouverture des fichier----
-setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid/data") #folder data
 rm(list = ls())
-load("1.3_mat_pat_clean_final.rds") #ouverture de la svg
+load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
-load("HVG_scran.rds") #ouverture de la svg
+load("data/HVG_scran.rds") #ouverture de la svg
 
 my_palette = colorRampPalette(c("royalblue4", "lightskyblue3", "white", "lightsalmon3","darkred"))(n = 256)
 
@@ -333,3 +332,4 @@ pheatmap(mat_DE_NR_R_HVG_all,
          cluster_cols = T,
          cluster_rows = T,)
 # pheatmap(mat_DE_NR_R_HVG_all, scale="row", fontsize_row=7, fontsize_col = 10,annotation_colors = list(mat_meta.REPONSE = c(REA = "#0000FF", NR = "#7570BE", "T"= "#117733", R="#F15854")),annotation_col = annC_VT4, color = my_palette, cutree_rows = 1, main = "Heatmap à partir des gènes uniques du DE de tout les gènes et des HVG", labels_col = coldata_num,cluster_cols = F,cluster_rows = T,)
+

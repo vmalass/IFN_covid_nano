@@ -23,9 +23,8 @@ library(pheatmap)
 library(apeglm)
 
 # 2-ouverture des fichier----
-setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid/data") #folder data
 rm(list = ls())
-load("1.1_mat_pat_clean.rds") #ouverture de la svg
+load("data/1.1_mat_pat_clean.rds") #ouverture de la svg
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
 
 # 3-PCA SANS REA & T----
@@ -285,25 +284,4 @@ ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, col = Groupe)) +
                      values = c("chartreuse4","cornflowerblue","darkorchid2","#909495","brown3"))+
   labs(x="PC1 : 27,9%", y="PC2 : 15%")+
   theme(legend.text = element_text(size = 13),legend.title = element_text(size = 15)) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
