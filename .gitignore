@@ -4,3 +4,4 @@
 *.Ruserdata
 *.DS_Store
 IFN_covid_nano.Rproj
+.Rproj.user
