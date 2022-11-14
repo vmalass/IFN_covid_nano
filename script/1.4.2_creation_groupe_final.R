@@ -88,16 +88,16 @@ all(row.names(coldata) == colnames(count_matrix))  # vérif que les patients son
 
 coldata_num_V1<- coldata$numero_patient
 
-NR= data.frame( "2", "13", "49","50", "60","62")
+NR= data.frame( "2", "13", "49","50", "62")
 NR <- as_tibble(t(NR))
-NR$classe = rep("NR",6)
+NR$classe = rep("NR",5)
 colnames(NR) = c("numero_patient", "classe")
 
 classe = rbind(classe,NR)
 
-RP = data.frame(  "10", "21", "26", "29", "48", "61")
+RP = data.frame(  "10", "21", "26", "29", "48", "60","61")
 RP <- as_tibble(t(RP))
-RP$classe = rep("RP",6)
+RP$classe = rep("RP",7)
 colnames(RP) = c("numero_patient", "classe")
 
 classe = rbind(classe, RP)
