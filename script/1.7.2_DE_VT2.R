@@ -282,7 +282,7 @@ pheatmap(mat_DE_NR_R_HVG_all,
          cluster_rows = T,)
 # pheatmap(mat_DE_NR_R_HVG_all, scale="row", fontsize_row=7, fontsize_col = 10,annotation_colors = list(mat_meta.REPONSE = c(REA = "#0000FF", RP = "#7570BE", "T"= "#117733", R="#F15854")),annotation_col = annC_VT4, color = my_palette, cutree_rows = 1, main = "Heatmap à partir des gènes uniques du DE de tout les gènes et des HVG", labels_col = coldata_num,cluster_cols = F,cluster_rows = T,)
 
-# 8-heatmap VT2/VT3/VT4 à partir des gènes unique du DE de tout les gènes et des HVG
+# 8-heatmap VT2/VT3/VT4 à partir des gènes unique du DE de tout les gènes et des HVG -----
 ## 8.1-Creation de la matrice
 name_DE_NR_R_HVG_all<- union(name_NR_R_HVG,name_NR_R_all_gene)
 
@@ -353,3 +353,7 @@ pheatmap(mat_DE_NR_R_HVG_all,
          cluster_cols = T,
          cluster_rows = T,)
 
+# 8- Save data-----
+write.table(name_DE_NR_R_HVG_all, file = "data/name_DE_R_RP_HVG_all_VT2.txt")
+a <- read.table("data/name_DE_R_RP_HVG_all_VT2.txt")
+a

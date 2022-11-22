@@ -30,19 +30,17 @@ load("data/HVG_scran.rds") #ouverture de la svg
 
 my_palette = colorRampPalette(c("royalblue4", "lightskyblue3", "white", "lightsalmon3","darkred"))(n = 256)
 
-# 3-DE R(31/16/8) vs NR(2/13/9/60/49) en VT1 all genes -----
+# 3-DE R(31/16/8) vs NR(2/13/60/49) en VT1 all genes -----
 ## 3.1-Creation de la matrice----
 mat_VT1 <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "VT1"),] 
 
 mat_VT1<- arrange(mat_VT1,numero_patient) #ordo par n° pat
 
-mat<- mat_VT1[mat_VT1$numero_patient==2,]
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==60,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])
+mat<- mat_VT1[mat_VT1$numero_patient==2,]                
+mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])     
+mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])     
+mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])     
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==49,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==9,])
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==31,])
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==16,])
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==8,]) #creation d'une lmat avec R et NR choisi
@@ -94,16 +92,14 @@ heatmap_NR_R_VT1 <- pheatmap(data_NR_R_VT1,
                              cluster_cols = T,
                              cluster_rows = T,)
 
-# 4-DE R(31/16/8) vs NR(2/13/9/60/49) en VT1 HVG----
+# 4-DE R(31/16/8) vs NR(2/13/60/49) en VT1 HVG----
 ## 4.1-Creation de la matrice---
 
-mat<- mat_VT1[mat_VT1$numero_patient==2,]
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==60,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])
+mat<- mat_VT1[mat_VT1$numero_patient==2,]                
+mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])     
+mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])     
+mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])     
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==49,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==9,])
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==31,])
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==16,])
 mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==8,]) #creation d'une lmat avec R et NR choisi
@@ -166,38 +162,39 @@ name_NR_R_HVG<- rownames(NR_R_HVG)
 name_NR_R_all_gene<- rownames(NR_R_all_gene)
 setdiff(name_NR_R_HVG, name_NR_R_all_gene)
 setdiff(name_NR_R_all_gene,name_NR_R_HVG)
+union(name_NR_R_HVG, name_NR_R_all_gene)
 
 # 5-heatmap VT1 NRvsR all gene T-----
 ## 5.1-creation de la matrice----
 
-mat<- mat_VT1[mat_VT1$numero_patient==2,]
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==60,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==49,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==9,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==31,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==16,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==8,]) #creation d'une lmat avec R et NR choisi
+# mat<- mat_VT1[mat_VT1$numero_patient==2,]
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==60,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==49,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==9,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==31,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==16,])
+# mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==8,]) #creation d'une lmat avec R et NR choisi
 
 
 mat_T <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "T"),] #DF avec tout les T
-mat<-rbind(mat, mat_T)
-
-mat_VT1 <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "VT1"),]
-mat_RP <- mat_VT1[which(mat_VT1$REPONSE %in% "RP"),]
-mat<-rbind(mat, mat_RP)
-
-mat_R <- mat_VT1[which(mat_VT1$REPONSE %in% "R"),]
-mat_R<- mat_R[mat_R$numero_patient!=31,]
-mat_R<- mat_R[mat_R$numero_patient!=16,]
-mat_R<- mat_R[mat_R$numero_patient!=8,]
-# mat_R<- mat_R[mat_R$numero_patient!=2,]
+# mat<-rbind(mat, mat_T)
+# 
+# mat_VT1 <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "VT1"),]
+# mat_RP <- mat_VT1[which(mat_VT1$REPONSE %in% "RP"),]
+# mat<-rbind(mat, mat_RP)
+# 
+# mat_R <- mat_VT1[which(mat_VT1$REPONSE %in% "R"),]
+# mat_R<- mat_R[mat_R$numero_patient!=31,]
+# mat_R<- mat_R[mat_R$numero_patient!=16,]
+# mat_R<- mat_R[mat_R$numero_patient!=8,]
 # mat_R<- mat_R[mat_R$numero_patient!=9,]
 # mat_R<- mat_R[mat_R$numero_patient!=60,]
-mat<-rbind(mat, mat_R)
+# mat<-rbind(mat, mat_R)
 
+mat<-rbind(mat_VT1,mat_T)
 
 ## 5.2-Gene DE DESeq2 HVG----
 
@@ -233,21 +230,9 @@ pheatmap(mat_DE_NR_R_HVG_all,
 
 # 6-heatmap VT1 NRvsR HVG avec T-----
 ## 6.1-Creation de la matrice-----
+mat_T <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "T"),] #DF avec tout les T
 
-mat<- mat_VT1[mat_VT1$numero_patient==2,]
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==60,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==49,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==9,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==31,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==16,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==8,]) #creation d'une lmat avec R et NR choisi
-
-mat<-rbind(mat, mat_T)
-mat<-rbind(mat, mat_RP)
-mat<-rbind(mat, mat_R)
+mat<-rbind(mat_VT1,mat_T)
 
 mat_meta<-mat[,737:743]
 coldata_VT4<-as.data.frame(mat_meta$REPONSE)
@@ -286,21 +271,6 @@ pheatmap(mat_DE_NR_R_HVG_all,
 ## 7.1-Creation de la matrice----
 name_DE_NR_R_HVG_all<- union(name_NR_R_HVG$name_NR_R_HVG,name_NR_R_all_gene$name_NR_R_all_gene)
 
-mat<- mat_VT1[mat_VT1$numero_patient==2,]
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==13,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==50,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==60,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==62,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==49,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==9,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==31,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==16,])
-mat<-rbind(mat,mat_VT1[mat_VT1$numero_patient==8,]) #creation d'une lmat avec R et NR choisi
-
-mat<-rbind(mat, mat_T)
-mat<-rbind(mat, mat_RP)
-mat<-rbind(mat, mat_R)
-
 mat_meta<-mat[,737:743]
 coldata_VT4<-as.data.frame(mat_meta$REPONSE)
 row.names(coldata_VT4)<-row.names(mat_meta)
@@ -334,7 +304,7 @@ pheatmap(mat_DE_NR_R_HVG_all,
 # pheatmap(mat_DE_NR_R_HVG_all, scale="row", fontsize_row=7, fontsize_col = 10,annotation_colors = list(mat_meta.REPONSE = c(REA = "#0000FF", NR = "#7570BE", "T"= "#117733", R="#F15854")),annotation_col = annC_VT4, color = my_palette, cutree_rows = 1, main = "Heatmap à partir des gènes uniques du DE de tout les gènes et des HVG", labels_col = coldata_num,cluster_cols = F,cluster_rows = T,)
 
 # 8- Save data-----
-write.table(name_DE_NR_R_HVG_all, file = "data/name_DE_NR_R_HVG_all.txt")
-a <- read.table("data/name_DE_NR_R_HVG_all.txt")
+write.table(name_DE_NR_R_HVG_all, file = "data/name_DE_NR_R_HVG_all_VT1.txt")
+a <- read.table("data/name_DE_NR_R_HVG_all_VT1.txt")
 a
 
