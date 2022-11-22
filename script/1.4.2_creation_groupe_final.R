@@ -23,9 +23,8 @@ library(pheatmap)
 library(apeglm)
 
 # 2-ouverture des fichier----
-setwd("~/Documents/JM/NanoString/NanoString_Covid/nanostring_covid/data") #folder data
 rm(list = ls())
-load("1.1_mat_pat_clean.rds") #ouverture de la svg
+load("data/1.1_mat_pat_clean.rds") #ouverture de la svg
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
 
 
@@ -224,8 +223,8 @@ mat_pat_clean$REPONSE <- classe$classe #ajout de la colonne REPONSE (NR_R_RP_REA
 mat_pat_clean<-arrange(mat_pat_clean, real_time_point, REPONSE) #ordo real_time_point en premiere puis REPONSE
 
 # 5-Svg fichier ----
-save(mat_pat_clean, file = "1.3_mat_pat_clean_final.rds") #svg du data
-load("1.3_mat_pat_clean_final.rds") #ouverture de la svg
+save(mat_pat_clean, file = "data/1.3_mat_pat_clean_final.rds") #svg du data
+load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
 
 
 
