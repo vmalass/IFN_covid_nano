@@ -1,6 +1,7 @@
 rm(list = ls())
 
-name_DE_NR_R_HVG_all<- read.table("data/name_DE_NR_R_HVG_all.txt")
+name_DE_NR_R_HVG_all_VT1<- read.table("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/name_DE_NR_R_HVG_all_VT1.txt")
+name_DE_R_RP_HVG_all_VT2<- read.table("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/name_DE_R_RP_HVG_all_VT2.txt")
 load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
 Metadata <- mat_pat_clean[737:743]
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
@@ -15,7 +16,10 @@ if (!require('AnnotationDbi')) BiocManager::install('AnnotationDbi'); library('A
 if (!require('enrichplot')) BiocManager::install('enrichplot'); library('enrichplot')
 if (!require('clusterProfiler')) BiocManager::install('clusterProfiler'); library('clusterProfiler')
 if (!require('ReactomePA')) BiocManager::install('ReactomePA'); library('ReactomePA')
-library(dplyr)
+if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
+if (!require('readr')) install.packages('readr'); library('readr')
+if (!require('stringr')) install.packages('stringr'); library('stringr')
+if (!require('factoextra')) install.packages('factoextra'); library('factoextra')
 
 
 
@@ -78,129 +82,38 @@ enrichedRes_GS <- enrichPathway(gene          = geneListEntrez_PA,
 barplot(enrichedRes_GS, showCategory=20, orderby="x") + ggtitle("Barplot of functional enrichment by REACTOM_PA")
 dotplot(enrichedRes_GS, showCategory=20) + ggtitle("Dotplot of functional enrichment by REACTOM_PA")
 
+
 # GSEA--------------------------------------------------------------------------
+#https://guangchuangyu.github.io/2015/05/use-clusterprofiler-as-an-universal-enrichment-analysis-tool/
+
+inteferon_gmt <- read.gmt("data/REACTOME_INTERFERON_SIGNALING.v2022.1.Hs.gmt")
+
+#dowload http://www.gsea-msigdb.org/gsea/msigdb/download_file.jsp?filePath=/msigdb/release/2022.1.Hs/c2.all.v2022.1.Hs.symbols.gmt (create count)
+msigdb_C2_gmt <- read.gmt("data/c2.all.v2022.1.Hs.symbols.gmt")
+
+enrichedRes_MSigDBC2 <- enricher(name_DE_NR_R_HVG_all_VT1$name_DE_NR_R_HVG_all,
+                                 TERM2GENE = msigdb_C2_gmt,
+                                 universe = colnames(mat_pat_clean[,1:736]))
+
+enrichedRes_MSigDBC2["REACTOME_INTERFERON_SIGNALING",]
+summary(enrichedRes_MSigDBC2)
+
+barplot(enrichedRes_MSigDBC2, showCategory=10, orderby="x") + ggtitle("Barplot of functional enrichment by MSigDBC2")
+dotplot(enrichedRes_MSigDBC2, showCategory=20) + ggtitle("Dotplot of functional enrichment by MSigDBC2")
+
+# enrichedRes_GO_mat = as.matrix(enrichedRes_MSigDBC2[])
 
 
-# Gene set IFN------------------------------------------------------------------
-par(mfrow=c(2,1))
-### REACTOME_INTERFERON_SIGNALING ###
-a <- read_tsv('data/REACTOME_INTERFERON_SIGNALING.v2022.1.Hs.tsv')
-members <- a[19,2]
-members <- str_split(members, ',')
-members <- as.data.frame(members[[1]])
-
-
-inter <- intersect(members$`members[[1]]`,colnames(mat_pat_clean[1:736]))
-mat_IFN <- mat_pat_clean[,match(inter, colnames(mat_pat_clean))] 
-mat_IFN <- cbind(Metadata, mat_IFN)
-
-## PCA VT1 gene IFN-------------------------------------------------------------
-
-ma<-mat_IFN$real_time_point %in% "VT1"
-mat<- mat_IFN[ma==T,]
-mata<-mat$real_time_point %in% "REA"
-mat<-mat[mata==F,]
-mat_R<-mat$real_time_point %in% "T"
-mat<-mat[mat_R==F,]
-
-MataData_PCA<-mat[,1:7]
-mat_PCA<-mat[,8:78]
-mat_PCA<-scale(mat_PCA)
-PCA <- prcomp(mat_PCA, scale. = F)
-fviz_eig(PCA, main = "Variance par PC", addlabels = TRUE)
-
-SelectPCA <- as.data.frame(PCA$x)
-mergeMetaAPC <- as.data.frame(cbind(SelectPCA, MataData_PCA))
-
-ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, color = REPONSE)) +
-  geom_point() + 
-  scale_color_manual(breaks = c("NR","R","RP"),
-                     values = c("darkorange","chartreuse4","cornflowerblue"))+
-  labs(title="PCA sur VT1 gène IFN")
-
-## PCA VT2 gene IFN-------------------------------------------------------------
-ma<-mat_IFN$real_time_point %in% "VT2"
-mat<- mat_IFN[ma==T,]
-mata<-mat$real_time_point %in% "REA"
-mat<-mat[mata==F,]
-mat_R<-mat$real_time_point %in% "T"
-mat<-mat[mat_R==F,]
-
-MataData_PCA<-mat[,1:7]
-mat_PCA<-mat[,8:78]
-mat_PCA<-scale(mat_PCA)
-PCA <- prcomp(mat_PCA, scale. = F)
-fviz_eig(PCA, main = "Variance par PC", addlabels = TRUE)
-
-SelectPCA <- as.data.frame(PCA$x)
-mergeMetaAPC <- as.data.frame(cbind(SelectPCA, MataData_PCA))
-
-ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, color = REPONSE)) +
-  geom_point() + 
-  scale_color_manual(breaks = c("NR","R","RP"),
-                     values = c("darkorange","chartreuse4","cornflowerblue"))+
-  labs(title="PCA sur VT2 gène IFN")
-
-### WP_HOSTPATHOGEN_INTERACTION_OF_HUMAN_CORONAVIRUSES_INTERFERON_INDUCTION ###
-a <- read_tsv('data/WP_HOSTPATHOGEN_INTERACTION_OF_HUMAN_CORONAVIRUSES_INTERFERON_INDUCTION.v2022.1.Hs.tsv')
-members <- a[19,2]
-members <- str_split(members, ',')
-members <- as.data.frame(members[[1]])
-
-
-inter <- intersect(members$`members[[1]]`,colnames(mat_pat_clean[1:736]))
-mat_IFN <- mat_pat_clean[,match(inter, colnames(mat_pat_clean))] 
-mat_IFN <- cbind(Metadata, mat_IFN)
-
-## PCA VT1 gene IFN-------------------------------------------------------------
-
-ma<-mat_IFN$real_time_point %in% "VT1"
-mat<- mat_IFN[ma==T,]
-mata<-mat$real_time_point %in% "REA"
-mat<-mat[mata==F,]
-mat_R<-mat$real_time_point %in% "T"
-mat<-mat[mat_R==F,]
-
-MataData_PCA<-mat[,1:7]
-mat_PCA<-mat[,8:38]
-mat_PCA<-scale(mat_PCA)
-PCA <- prcomp(mat_PCA, scale. = F)
-fviz_eig(PCA, main = "Variance par PC", addlabels = TRUE)
-
-SelectPCA <- as.data.frame(PCA$x)
-mergeMetaAPC <- as.data.frame(cbind(SelectPCA, MataData_PCA))
-
-ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, color = REPONSE)) +
-  geom_point() + 
-  scale_color_manual(breaks = c("NR","R","RP"),
-                     values = c("darkorange","chartreuse4","cornflowerblue"))+
-  labs(title="PCA sur VT1 gène IFN")
-
-## PCA VT2 gene IFN-------------------------------------------------------------
-ma<-mat_IFN$real_time_point %in% "VT2"
-mat<- mat_IFN[ma==T,]
-mata<-mat$real_time_point %in% "REA"
-mat<-mat[mata==F,]
-mat_R<-mat$real_time_point %in% "T"
-mat<-mat[mat_R==F,]
-
-MataData_PCA<-mat[,1:7]
-mat_PCA<-mat[,8:38]
-mat_PCA<-scale(mat_PCA)
-PCA <- prcomp(mat_PCA, scale. = F)
-fviz_eig(PCA, main = "Variance par PC", addlabels = TRUE)
-
-SelectPCA <- as.data.frame(PCA$x)
-mergeMetaAPC <- as.data.frame(cbind(SelectPCA, MataData_PCA))
-
-ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, color = REPONSE)) +
-  geom_point() + 
-  scale_color_manual(breaks = c("NR","R","RP"),
-                     values = c("darkorange","chartreuse4","cornflowerblue"))+
-  labs(title="PCA sur VT2 gène IFN")
-
-
-
+# geneorderlist = 153:1
+# names(geneorderlist) = name_DE_NR_R_HVG_all_VT1$name_DE_NR_R_HVG_all
+# 
+# GSEA_MSigDBC2 = GSEA(geneorderlist,  TERM2GENE = msigdb_C2_gmt, pvalueCutoff = 1)
+# 
+# gseaplot(GSEA_MSigDBC2, "REACTOME_INTERFERON_SIGNALING")
+# 
+# GSEA_MSigDBC2_df = as.data.frame(GSEA_MSigDBC2)
+# 
+# GSEA_MSigDBC2_df[GSEA_MSigDBC2_df$Description == "REACTOME_INTERFERON_SIGNALING",] 
 
 
 
