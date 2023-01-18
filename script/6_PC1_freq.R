@@ -7,6 +7,7 @@ library(ggplot2)
 library(dplyr)
 library(stringr)
 library(cowplot)
+library(openxlsx)
 
 # 2 Import data-----------------------------------------------------------------
 rm(list = ls())
@@ -44,21 +45,44 @@ for (namevar_i in namevars_to_plot) {
   
 }
 
-# different moyen d'afficher tes graphes avec 2 libraries : cowplot et patchwork
+### visalisation & save ###
 
 for (p in list_plot) {
   print(p)
-}
+} # affiche les plots
 
 
-cowplot::plot_grid(plotlist = list_plot[1:6], ncol = 2)
+cowplot::plot_grid(plotlist = list_plot[1:6], ncol = 2) # pour orga ne nombre de plot sur la page
 
 p_all = plot_grid(plotlist = list_plot, ncol = 3)
 ggsave(filename = "result/main_subset_VT1.pdf", plot = p_all, width = 20, height = 50, limitsize = F )
 
+### 3.1.1 VT1 correlation-------------------------------------------------------
+### Calcule des correlations & save ###
 matcor <- cbind(data_fi$`Age à S1`, data_fi[11:50])
-mcor <- t(as.data.frame(cor(data_fi$SelectPCA.PC1, matcor)))
+colnames(matcor)[1] <- "age"
+mcor <- t(as.data.frame(cor(data_fi$SelectPCA.PC1, matcor, method= "pearson")))
 write.table(mcor, file = "result/correlation_main_subset_VT1.txt")
+
+### correlation with p-value ###
+namecor <- names(matcor)
+list_plot <- list()
+for (i in namecor) {
+  pi<-cor.test(data_fi$SelectPCA.PC1, matcor[[i]], method= "pearson")
+  list_plot[[i]] <- pi
+}
+for (p in list_plot) {
+  print(p)
+}
+dat <-  NULL
+for (i in list_plot) {
+  test <- cbind(as.data.frame(i$p.value),as.data.frame(i$estimate))
+  dat <- rbind(dat, test)
+}
+rownames(dat) <- colnames(matcor)
+colnames(dat) <- c("p-val", "cor")
+write.xlsx(dat, file = "result/correlation_pvalue_main_subset_VT1.xlsx", rowNames = T)
+
 
 
 # library(patchwork)
@@ -106,8 +130,30 @@ p_all = plot_grid(plotlist = list_plot, ncol = 3)
 ggsave(filename = "result/main_subset_VT2.pdf", plot = p_all, width = 20, height = 50, limitsize = F )
 
 matcor <- cbind(data_fi$`Age à S1`, data_fi[11:50])
+colnames(matcor)[1] <- "age"
 mcor <- t(as.data.frame(cor(data_fi$SelectPCA.PC1, matcor)))
 write.table(mcor, file = "result/correlation_main_subset_VT2.txt")
+
+### 3.1.2 VT2 correlation-------------------------------------------------------
+### correlation with p-value ###
+namecor <- names(matcor)
+list_plot <- list()
+for (i in namecor) {
+  pi<-cor.test(data_fi$SelectPCA.PC1, matcor[[i]], method= "pearson")
+  list_plot[[i]] <- pi
+}
+for (p in list_plot) {
+  print(p)
+}
+dat <-  NULL
+for (i in list_plot) {
+  test <- cbind(as.data.frame(i$p.value),as.data.frame(i$estimate))
+  dat <- rbind(dat, test)
+}
+rownames(dat) <- colnames(matcor)
+colnames(dat) <- c("p-val", "cor")
+write.xlsx(dat, file = "result/correlation_pvalue_main_subset_VT2.xlsx", rowNames = T)
+
 
 # 4 Frequence cell 6 mois-------------------------------------------------------
 ## 4.1 VT1 soit separation NR---------------------------------------------------
@@ -124,8 +170,15 @@ namevars_to_plot <- names(data_fi[14:99])
 list_plot <- list()
 for (namevar_i in namevars_to_plot) {
   print(namevar_i)
+  # suppression des NA dans la variable
+  data_clean <- as.data.frame(data_fi[namevar_i])
+  data_clean$REPONSE <- data_fi$REPONSE
+  data_clean$label_patient <- data_fi$label_patient
+  data_clean$SelectPCA.PC1 <- data_fi$SelectPCA.PC1
+  data_clean <- na.omit(data_clean)
+  # plot 
   p_i <- ggplot(
-    data_fi, aes(x = SelectPCA.PC1, y = .data[[namevar_i]], color = REPONSE, label = label_patient)) +
+    data_clean, aes(x = SelectPCA.PC1, y = .data[[namevar_i]], color = REPONSE, label = label_patient)) +
     geom_point()+
     ggrepel::geom_text_repel(nudge_x=0.6,
                              # nudge_y=0.15,
@@ -151,8 +204,55 @@ cowplot::plot_grid(plotlist = list_plot[1:6], ncol = 2)
 p_all = plot_grid(plotlist = list_plot, ncol = 3)
 ggsave(filename = "result/6_months_VT1.pdf", plot = p_all, width = 20, height = 100, limitsize = F )
 
-mcor <- t(as.data.frame(cor(data_fi$SelectPCA.PC1, data_fi[14:99])))
-write.table(mcor, file = "result/correlation_6_months_VT1.txt")
+### 4.1.1 VT1 correlation-------------------------------------------------------
+### Calcule correlation ###
+
+list_cor <- NULL
+for (namevar_i in namevars_to_plot) {
+  print(namevar_i)
+  # suppression des NA dans la variable
+  data_clean <- as.data.frame(data_fi[namevar_i])
+  # data_clean$REPONSE <- data_fi$REPONSE
+  # data_clean$label_patient <- data_fi$label_patient
+  data_clean$SelectPCA.PC1 <- data_fi$SelectPCA.PC1
+  data_clean <- na.omit(data_clean)
+  
+  p_i <- t(as.data.frame(cor(data_clean$SelectPCA.PC1, data_clean[1])))
+  list_cor[namevar_i] <-p_i
+}
+
+list_cor <- as.data.frame(list_cor)
+write.table(list_cor, file = "result/correlation_6_months_VT1.txt")
+
+
+### correlation with p-value ###
+
+list_cor_pval <- list()
+for (namevar_i in namevars_to_plot) {
+  print(namevar_i)
+  # suppression des NA dans la variable
+  data_clean <- as.data.frame(data_fi[namevar_i])
+  # data_clean$REPONSE <- data_fi$REPONSE
+  # data_clean$label_patient <- data_fi$label_patient
+  data_clean$SelectPCA.PC1 <- data_fi$SelectPCA.PC1
+  data_clean <- na.omit(data_clean)
+  
+  p_i <- cor.test(data_clean$SelectPCA.PC1, data_clean[[namevar_i]], method= "pearson")
+  list_cor_pval[[namevar_i]] <- p_i
+}
+
+for (p in list_cor_pval) {
+  print(p)
+}
+
+dat <-  NULL
+for (i in list_cor_pval) {
+  test <- cbind(as.data.frame(i$p.value),as.data.frame(i$estimate))
+  dat <- rbind(dat, test)
+}
+rownames(dat) <- namevars_to_plot
+colnames(dat) <- c("p-val", "cor")
+write.xlsx(dat, file = "result/correlation_pvalue_6_months_VT1.xlsx", rowNames = T)
 
 ## 4.2 VT2 soit separation RP---------------------------------------------------
 
@@ -168,8 +268,15 @@ namevars_to_plot <- names(data_fi[14:99])
 list_plot <- list()
 for (namevar_i in namevars_to_plot) {
   print(namevar_i)
+  # suppression des NA dans la variable
+  data_clean <- as.data.frame(data_fi[namevar_i])
+  data_clean$REPONSE <- data_fi$REPONSE
+  data_clean$label_patient <- data_fi$label_patient
+  data_clean$SelectPCA.PC1 <- data_fi$SelectPCA.PC1
+  data_clean <- na.omit(data_clean)
+  # plot 
   p_i <- ggplot(
-    data_fi, aes(x = SelectPCA.PC1, y = .data[[namevar_i]], color = REPONSE, label = label_patient)) +
+    data_clean, aes(x = SelectPCA.PC1, y = .data[[namevar_i]], color = REPONSE, label = label_patient)) +
     geom_point()+
     ggrepel::geom_text_repel(nudge_x=0.6,
                              # nudge_y=0.15,
@@ -195,9 +302,54 @@ cowplot::plot_grid(plotlist = list_plot[1:6], ncol = 2)
 p_all = plot_grid(plotlist = list_plot, ncol = 3)
 ggsave(filename = "result/6_months_VT2.pdf", plot = p_all, width = 20, height = 100, limitsize = F )
 
-mcor <- t(as.data.frame(cor(data_fi$SelectPCA.PC1, data_fi[14:99])))
-write.table(mcor, file = "result/correlation_6_months_VT2.txt")
+### 4.1.2 VT1 correlation-------------------------------------------------------
+### Calcule correlation ###
 
+list_cor <- NULL
+for (namevar_i in namevars_to_plot) {
+  print(namevar_i)
+  # suppression des NA dans la variable
+  data_clean <- as.data.frame(data_fi[namevar_i])
+  # data_clean$REPONSE <- data_fi$REPONSE
+  # data_clean$label_patient <- data_fi$label_patient
+  data_clean$SelectPCA.PC1 <- data_fi$SelectPCA.PC1
+  data_clean <- na.omit(data_clean)
+  
+  p_i <- t(as.data.frame(cor(data_clean$SelectPCA.PC1, data_clean[1])))
+  list_cor[namevar_i] <-p_i
+}
+
+list_cor <- as.data.frame(list_cor)
+write.table(list_cor, file = "result/correlation_6_months_VT2.txt")
+
+### correlation with p-value ###
+
+list_cor_pval <- list()
+for (namevar_i in namevars_to_plot) {
+  print(namevar_i)
+  # suppression des NA dans la variable
+  data_clean <- as.data.frame(data_fi[namevar_i])
+  # data_clean$REPONSE <- data_fi$REPONSE
+  # data_clean$label_patient <- data_fi$label_patient
+  data_clean$SelectPCA.PC1 <- data_fi$SelectPCA.PC1
+  data_clean <- na.omit(data_clean)
+  
+  p_i <- cor.test(data_clean$SelectPCA.PC1, data_clean[[namevar_i]], method= "pearson")
+  list_cor_pval[[namevar_i]] <- p_i
+}
+
+for (p in list_cor_pval) {
+  print(p)
+}
+
+dat <-  NULL
+for (i in list_cor_pval) {
+  test <- cbind(as.data.frame(i$p.value),as.data.frame(i$estimate))
+  dat <- rbind(dat, test)
+}
+rownames(dat) <- namevars_to_plot
+colnames(dat) <- c("p-val", "cor")
+write.xlsx(dat, file = "result/correlation_pvalue_6_months_VT2.xlsx", rowNames = T)
 
 
 
