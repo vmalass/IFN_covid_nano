@@ -47,7 +47,7 @@ mat_pat_gene_count<-mat_pat_gene_count[mat_pat_gene_count$numero_patient !=28,]
 mat_pat_gene_count<-mat_pat_gene_count[mat_pat_gene_count$numero_patient !=56,]
 mat_pat_gene_count<-mat_pat_gene_count[mat_pat_gene_count$numero_patient !=64,]
 mat_pat_gene_count<-mat_pat_gene_count[mat_pat_gene_count$numero_patient !=66,] # sup les pat 28, 56, 64, 66 qui n'ont qu'un plvmt
-mat_pat_gene_count<-mat_pat_gene_count[mat_pat_gene_count$numero_patient !=24,] # sup le pat 24 qui n'a pas de V1
+# mat_pat_gene_count<-mat_pat_gene_count[mat_pat_gene_count$numero_patient !=24,] # sup le pat 24 qui n'a pas de V1
 
 mat_pat_gene_count<- arrange(mat_pat_gene_count,real_time_point) #ordo par real time point
 

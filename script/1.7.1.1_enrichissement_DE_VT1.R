@@ -25,7 +25,8 @@ if (!require('factoextra')) install.packages('factoextra'); library('factoextra'
 
 # KEGG -------------------------------------------------------------------------
 geneListEntrez = mapIds(org.Hs.eg.db, 
-                        keys=name_DE_NR_R_HVG_all[,1], 
+                        keys= name_DE_NR_R_HVG_all_VT1[,1],
+                        # name_DE_NR_R_HVG_all[,1], 
                         column="ENTREZID", 
                         keytype="SYMBOL", 
                         multiVals="first")
@@ -41,10 +42,11 @@ Kres <- enrichKEGG(gene          = geneListEntrez,
 
 barplot(Kres, showCategory=20, order=T) + ggtitle("Barplot of functional enrichment by KEGG")
 dotplot(Kres, showCategory=20) + ggtitle("Dotplot of functional enrichment by KEGG")
+a <- emapplot(Kres)
 
 # GO ---------------------------------------------------------------------------
 geneListEnsembl= mapIds(org.Hs.eg.db, 
-                        keys=name_DE_NR_R_HVG_all[,1], 
+                        keys=name_DE_NR_R_HVG_all_VT1[,1], 
                         column="ENSEMBL", 
                         keytype="SYMBOL", 
                         multiVals="first")
@@ -67,7 +69,7 @@ dotplot(enrichedRes_GO, showCategory=20) + ggtitle("Dotplot of functional enrich
 
 # REACTOM_PA--------------------------------------------------------------------
 geneListEntrez_PA = mapIds(org.Hs.eg.db, 
-                        keys=name_DE_NR_R_HVG_all[,1], 
+                        keys=name_DE_NR_R_HVG_all_VT1[,1], 
                         column="ENTREZID", 
                         keytype="SYMBOL", 
                         multiVals="first")

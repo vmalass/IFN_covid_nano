@@ -87,23 +87,23 @@ all(row.names(coldata) == colnames(count_matrix))  # vérif que les patients son
 
 coldata_num_V1<- coldata$numero_patient
 
-NR= data.frame(  "13", "49","50", "62")
+NR= data.frame(   "49","50")
 NR <- as_tibble(t(NR))
-NR$classe = rep("NR",4)
+NR$classe = rep("NR",2)
 colnames(NR) = c("numero_patient", "classe")
 
 classe = rbind(classe,NR)
 
-RP = data.frame(  "10", "21", "26", "29", "48", "61")
+RP = data.frame(  "10", "21","23" , "26", "29", "48","60", "61")
 RP <- as_tibble(t(RP))
-RP$classe = rep("RP",6)
+RP$classe = rep("RP",8)
 colnames(RP) = c("numero_patient", "classe")
 
 classe = rbind(classe, RP)
 
-R = data.frame("1","2","3"  ,  "5" ,  "8"  ,"9",  "11","12","14", "16","17",  "19", "20" , "22" ,"23" ,"25",  "27" , "30" ,"31", "47" ,  "51",   "52", "54", "58","59","60",  "63")
+R = data.frame("1","2","3"  ,  "5" ,"6",  "8"  ,"9",  "11","12","13","14", "16","17",  "19", "20" , "22" ,"25",  "27" , "30" ,"31", "47" ,  "51",   "52", "54", "58","59", "62", "63")
 R<- as_tibble(t(R))
-R$classe <- rep("R", 27)
+R$classe <- rep("R", 28)
 colnames(R)<- c("numero_patient", "classe")
 
 classe = rbind(classe, R)
@@ -123,22 +123,24 @@ coldata<-arrange(coldata,numero_patient)
 all(row.names(coldata) == colnames(count_matrix))  # vérif que les patients sont dans le meme ordre pour les deux tables
 coldata_num_V2<- coldata$numero_patient
 
-NR= data.frame("13",  "49","50")
+NR= data.frame(  "49","50")
 NR <- as_tibble(t(NR))
-NR$classe = rep("NR",3)
+NR$classe = rep("NR",2)
 colnames(NR) = c("numero_patient", "classe")
 classe = rbind(NR, classe)
 
-RP = data.frame( "4",  "6", "10", "15", "21", "26", "29","48","61")
+RP = data.frame( "4",   "10", "15", "21","23", "26", "29","48","60","61")
 RP <- as_tibble(t(RP))
-RP$classe = rep("RP",9)
+RP$classe = rep("RP",10)
 colnames(RP) = c("numero_patient", "classe")
 
 classe = rbind(classe, RP)
 
-R = data.frame("1","2" ,"3"  ,  "5"  ,"7",  "8"  , "9",  "11","12",   "14",  "16","17", "18", "19", "20" , "22" ,"23" ,"25",  "27" , "30" ,"31", "47" ,"51",  "52", "54", "58","59", "60",  "63")
+R = data.frame("1","2" ,"3"  ,  "5"  ,"6","7",  "8"  , "9",  "11","12","13",   
+               "14",  "16","17", "18", "19", "20" , "22", "24", "24" ,"25", 
+               "27" , "30" , "31", "47" ,"51",  "52", "54", "58","59", "63")
 R<- as_tibble(t(R))
-R$classe <- rep("R", 29)
+R$classe <- rep("R", 31)
 colnames(R)<- c("numero_patient", "classe")
 
 classe = rbind(classe, R)
@@ -158,22 +160,24 @@ coldata<-arrange(coldata,numero_patient)
 all(row.names(coldata) == colnames(count_matrix))  # vérif que les patients sont dans le meme ordre pour les deux tables
 coldata_num_V3<- coldata$numero_patient
 
-NR= data.frame( "13","62")
-NR <- as_tibble(t(NR))
-NR$classe = rep("NR",2)
-colnames(NR) = c("numero_patient", "classe")
-classe = rbind(classe, NR)
+# NR= data.frame()
+# NR <- as_tibble(t(NR))
+# NR$classe = rep("NR",)
+# colnames(NR) = c("numero_patient", "classe")
+# classe = rbind(classe, NR)
 
-RP = data.frame( "4", "6", "10","15", "21", "26", "29")
+RP = data.frame( "4", "10","15", "21","23", "26", "29")
 RP <- as_tibble(t(RP))
 RP$classe = rep("RP",7)
 colnames(RP) = c("numero_patient", "classe")
 
 classe = rbind(classe, RP)
 
-R = data.frame("1","2","3"  ,  "5",   "7"  ,  "8"  , "9",  "11","12",   "14",  "16", "17","18",  "19", "20" , "22" ,"23" ,"25",  "27" , "30" ,"31")
+R = data.frame("1", "2", "3", "5",  "6",  "7",  "8",  "9",  "11", "12", "13", 
+               "14", "16", "17", "18", "19", "20", "22", "24", "25", "27", "30",
+               "31", "62" )
 R<- as_tibble(t(R))
-R$classe <- rep("R", 21)
+R$classe <- rep("R", 24)
 colnames(R)<- c("numero_patient", "classe")
 
 classe = rbind(classe, R)
@@ -193,22 +197,24 @@ coldata<-arrange(coldata,numero_patient)
 all(row.names(coldata) == colnames(count_matrix))  # vérif que les patients sont dans le meme ordre pour les deux tables
 coldata_num_V4<- coldata$numero_patient
 
-NR= data.frame(  "13")
-NR <- as_tibble(t(NR))
-NR$classe = rep("NR",1)
-colnames(NR) = c("numero_patient", "classe")
-classe = rbind(classe, NR)
+# NR= data.frame(  )
+# NR <- as_tibble(t(NR))
+# NR$classe = rep("NR",1)
+# colnames(NR) = c("numero_patient", "classe")
+# classe = rbind(classe, NR)
 
-RP = data.frame( "4","4",  "6",  "6", "10", "15","15", "21", "26")
+RP = data.frame( "4","4", "10", "15","15", "21","23", "26")
 RP <- as_tibble(t(RP))
-RP$classe = rep("RP",9)
+RP$classe = rep("RP",8)
 colnames(RP) = c("numero_patient", "classe")
 
 classe = rbind(classe, RP)
 
-R = data.frame("1","2","3"  ,  "5"  ,"7","7",  "8"  , "9",  "11","12",   "14",  "16","17", "18", "18",  "19", "20" , "22" ,"23","25",  "27" , "30" ,"31")
+R = data.frame("1","2","3"  ,  "5"  ,"6", "7","7",  "8"  , "9",  "11","12","13", 
+               "14",  "16","17", "18", "18",  "19", "20" , "22" ,"25",  "27" ,
+               "30" ,"31")
 R<- as_tibble(t(R))
-R$classe <- rep("R", 23)
+R$classe <- rep("R", 24)
 colnames(R)<- c("numero_patient", "classe")
 
 classe = rbind(classe, R)

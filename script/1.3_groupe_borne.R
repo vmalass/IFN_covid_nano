@@ -236,6 +236,5 @@ ggplot(data = GP5, aes_string(x="jours_prelevement", y= "IFI27", color = "couleu
 
 
 # Pour VT1 et VT2 on selectionne tout les patients qui ressorte au moins dans deux gènes pour les attribuer aux groupes NR & RP
-# NR 13 / 49 / 50 / 62
-# RP 4 / 6 / 10 / 15 / 21 / 26 / 29 / 48 / 61
-
+# NR 49 / 50 
+# RP 4 / 10 / 15 / 21 / 23 / 26 / 29 / 48 / 60 / 61

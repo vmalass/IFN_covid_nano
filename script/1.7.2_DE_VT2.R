@@ -24,15 +24,18 @@ library(apeglm)
 
 # 2-ouverture des fichier----
 rm(list = ls())
-load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
+# load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
+load("data/1.2_mat_pat_clean.rds") #ouverture de la svg
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
 load("data/HVG_scran.rds") #ouverture de la svg
 
 my_palette = colorRampPalette(c("royalblue4", "lightskyblue3", "white", "lightsalmon3","darkred"))(n = 256)
 
-# 3-DE R vs RP en VT2 all genes -----
+# 3-DE R vs RP (sans 60 & 23) en VT2 all genes -----
 ## 3.1-Creation de la matrice----
 mat_VT2 <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "VT2"),] 
+mat<- mat_VT2[mat_VT2$numero_patient!=60,]
+mat_VT2<-mat[mat$numero_patient!=23,] # suppression n°60 & 23 NR car pas dans le cluster sur heatmap HVG VT2
 
 mat_VT2<- arrange(mat_VT2,numero_patient) #ordo par n° pat
 
@@ -72,14 +75,15 @@ rownames(annC_VT2_DE) <- colnames(data_NR_R_VT2)
 
 heatmap_NR_R_VT2 <- pheatmap(data_NR_R_VT2, 
                              scale="row", 
-                             fontsize_row=10, 
+                             fontsize_row=12, 
+                             fontsize_col=15, 
                              annotation_col = annC_VT2_DE,
                              annotation_colors = list(condition = c( NR = "#7570BE",
                                                                      R="#F15854",
                                                                      RP = "#882255")),
                              color = my_palette, 
                              cutree_rows = 2,
-                             main = "DE à partir de tout les gènes et des prélèvements VT2 avec NRvsR", 
+                             main = "DE à partir de tout les gènes et des prélèvements VT2 avec RvsRP", 
                              labels_col = coldata_num,
                              cluster_cols = T,
                              cluster_rows = T,)
@@ -89,6 +93,8 @@ heatmap_NR_R_VT2 <- pheatmap(data_NR_R_VT2,
 ## 4.1-Creation de la matrice---
 
 mat_VT2 <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "VT2"),] 
+mat<- mat_VT2[mat_VT2$numero_patient!=60,]
+mat_VT2<-mat[mat$numero_patient!=23,] # suppression n°60 & 23 NR car pas dans le cluster sur heatmap HVG VT2
 
 mat_VT2<- arrange(mat_VT2,numero_patient) #ordo par n° pat
 
@@ -117,14 +123,14 @@ rld <- rlogTransformation(dds_mat, blind=FALSE) #transforme le dds en log pour u
 
 
 ##### R
-dds_mat$condition <- relevel(dds_mat$condition, ref = "R")
+dds_mat$condition <- relevel(dds_mat$condition, ref = "RP")
 dds_mat <- DESeq(dds_mat)
 resultsNames(dds_mat)
-res <- results(dds_mat, contrast=c("condition", "RP", "R"))
+res <- results(dds_mat, contrast=c("condition", "R", "RP"))
 res <- as.data.frame(res)
 
 # RP vs R
-res_NR_R <- lfcShrink(dds_mat, coef = "condition_RP_vs_R", type = "apeglm", lfcThreshold = 1) #resultat avec le calcule de la pval ajuste a partir de 1 et pas 0 (par rapport au threshold) : https://support.bioconductor.org/p/113664/
+res_NR_R <- lfcShrink(dds_mat, coef = "condition_R_vs_RP", type = "apeglm", lfcThreshold = 1) #resultat avec le calcule de la pval ajuste a partir de 1 et pas 0 (par rapport au threshold) : https://support.bioconductor.org/p/113664/
 
 NR_R <- res_NR_R[res_NR_R$svalue < 0.05 & !is.na(res_NR_R$svalue) & res_NR_R$log2FoldChange > 1 | res_NR_R$svalue < 0.05 & !is.na(res_NR_R$svalue) & res_NR_R$log2FoldChange < -1 , ]   #tris des genes avec sval<5% et L2FC <-1 & >1
 NR_R_HVG <- as.data.frame(NR_R)
@@ -136,7 +142,8 @@ rownames(annC_VT2_DE) <- colnames(data_NR_R_VT2)
 
 heatmap_NR_R_VT2_HVG <- pheatmap(data_NR_R_VT2, 
                                  scale="row", 
-                                 fontsize_row=10, 
+                                 fontsize_row=12, 
+                                 fontsize_col=15, 
                                  annotation_col = annC_VT2_DE, 
                                  annotation_colors = list(condition = c(  NR = "#7570BE",
                                                                           R="#F15854",

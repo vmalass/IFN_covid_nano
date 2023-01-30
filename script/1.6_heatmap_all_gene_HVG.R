@@ -43,7 +43,7 @@ mat_REA_T<-rbind(mat_REA,mat_T)
 mat_VT1<-mat_pat_clean$real_time_point %in% "VT1" #
 mat_VT1<-mat_pat_clean[mat_VT1==T,]
 mat_VT1<-arrange(mat_VT1, REPONSE)
-mat_VT1<-rbind(mat_VT1,mat_REA_T)
+mat_VT1<-rbind(mat_VT1,mat_T)
 coldata_VT1<-as.data.frame(mat_VT1$REPONSE)
 row.names(coldata_VT1)<-row.names(mat_VT1)
 
@@ -60,11 +60,11 @@ annC_VT1<-rename(annC_VT1,Groupe=mat_VT1.REPONSE)
 pheatmap(mat_log_VT1, 
          scale="row", 
          fontsize_row=1,
-         fontsize_col = 5,
+         fontsize_col = 10,
          annotation_colors = list(Groupe = c(NR = "#7570BE", 
                                                       R="#F15854", 
                                                       RP="#882255",
-                                                      REA = "#0000FF", 
+                                                      # REA = "#0000FF", 
                                                       "T"= "#117733")),
          annotation_col = annC_VT1, color = my_palette, 
          cutree_rows = 1,
@@ -81,11 +81,11 @@ mat_top_hvgs_VT1<- mat_log_VT1[test==T,]   #ne garde en colone que les True
 pheatmap(mat_top_hvgs_VT1,
          scale="row", 
          fontsize_row=1, 
-         fontsize_col = 5,
+         fontsize_col = 15,
          annotation_colors = list(Groupe = c(NR = "#7570BE",
                                                       R="#F15854", 
                                                       RP="#882255",
-                                                      REA = "#0000FF",
+                                                      # REA = "#0000FF",
                                                       "T"= "#117733")),
          annotation_col = annC_VT1, 
          color = my_palette,
@@ -102,7 +102,7 @@ pheatmap(mat_top_hvgs_VT1,
 mat_VT2<-mat_pat_clean$real_time_point %in% "VT2"
 mat_VT2<-mat_pat_clean[mat_VT2==T,]
 mat_VT2<-arrange(mat_VT2, REPONSE)
-mat_VT2<-rbind(mat_VT2,mat_REA_T)
+mat_VT2<-rbind(mat_VT2,mat_T)
 coldata_VT2<-as.data.frame(mat_VT2$REPONSE)
 row.names(coldata_VT2)<-row.names(mat_VT2)
 
@@ -119,11 +119,11 @@ annC_VT2<-rename(annC_VT2,Groupe=mat_VT2.REPONSE)
 pheatmap(mat_log_VT2,
          scale="row",
          fontsize_row=1,
-         fontsize_col = 5,
+         fontsize_col = 10,
          annotation_colors = list(Groupe = c(NR = "#7570BE",
                                                       R="#F15854",
                                                       RP="#882255",
-                                                      REA = "#0000FF",
+                                                      # REA = "#0000FF",
                                                       "T"= "#117733")),
          annotation_col = annC_VT2,
          color = my_palette, 
@@ -142,11 +142,11 @@ mat_top_hvgs_VT2<- mat_log_VT2[test==T,]   #ne garde en colone que les True
 pheatmap(mat_top_hvgs_VT2, 
          scale="row",   
          fontsize_row=1, 
-         fontsize_col = 5,
+         fontsize_col = 15,
          annotation_colors = list(Groupe = c(NR = "#7570BE", 
                                                       R="#F15854", 
                                                       RP="#882255",
-                                                      REA = "#0000FF",
+                                                      # REA = "#0000FF",
                                                       "T"= "#117733")),
          annotation_col = annC_VT2, 
          color = my_palette,
