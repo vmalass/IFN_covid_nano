@@ -26,15 +26,15 @@ Data issu des données NanoString du papier ([Early nasal type I IFN immunity ag
     - 43 gènes commun entre les deux DE sur 79 soit 54% communs
 
 ## Definitions des groupes :
-| Tables | Are | Cool | |----------|:-------------:|------:| | col 1 is| left-aligned | $1600 |	
-Groupes	numéro patient	nombre de patients
-NR	49 / 50 	2
-NR-	2 / 13 / 62 	3
-R	X	25
-RP-	19 / 23 / 52 / 59 	4
-RP	4 / 10 / 15 / 21 / 26 / 29 / 48 / 61 	8
-A	60 	1
-T	X	7
+| Groupes        | numéro patient      | nombre de patients |
+| ------|-----|-----|
+| NR |	49 / 50 |	2 |
+| NR- |	2 / 13 / 62 |	3 |
+| R	| X |	25 |
+| RP-	| 19 / 23 / 52 / 59 |	4 |
+| RP	| 4 / 10 / 15 / 21 / 26 / 29 / 48 / 61 |	8 |
+| A |	60 |	1 |
+| T |	X |	7 |
 
 ## On refait l’analyse avec les nouveaux groupes
 - 2 DE entre NRvsR à partir de tous les gènes et des HVG : 
