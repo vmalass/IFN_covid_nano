@@ -26,6 +26,7 @@ Data issu des données NanoString du papier ([Early nasal type I IFN immunity ag
     - 43 gènes commun entre les deux DE sur 79 soit 54% communs
 
 ## Definitions des groupes :
+| Tables | Are | Cool | |----------|:-------------:|------:| | col 1 is| left-aligned | $1600 |	
 Groupes	numéro patient	nombre de patients
 NR	49 / 50 	2
 NR-	2 / 13 / 62 	3
@@ -46,7 +47,7 @@ T	X	7
     - 45 gènes en commun entre les deux DE sur 81 soit 55% communs
 
 ## Corrélation entre les différentes PC1
-Dans l’analyse nous avons générés différentes « PC1 » issu de DE entre NRvsR, RvsRP à différents times points (VT1, 2) mais également avec une signature IFN obtenus sur GSEA (fichier data/REACTOME_INTERFERON_SIGNALING.v2022.1.Hs.tsv) (http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INTERFERON_SIGNALING.html) 
+Dans l’analyse nous avons générés différentes « PC1 » issu de DE entre NRvsR, RvsRP à différents times points (VT1, 2) mais également avec une signature IFN obtenus sur GSEA (fichier data/REACTOME_INTERFERON_SIGNALING.v2022.1.Hs.tsv) [lien GSEA](http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INTERFERON_SIGNALING.html) 
 Toutes les corrélations sont proches de 1, donc les signatures sont similaires on choisit pour la suite les gènes DE NRvsR unique entre le DE de tous les gènes et HVG.
 
 ## Analyse des fréquences cellulaires à V1, V4 et 6 mois
