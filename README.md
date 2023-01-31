@@ -52,8 +52,9 @@ Toutes les corrélations sont proches de 1, donc les signatures sont similaires 
 
 ## Analyse des fréquences cellulaires à V1, V4 et 6 mois
 Pour cela nous sommes partie des prélèvements V1 et fait une PCA à partir des gènes DE NRvsR. 
-Nous regardons les fréquences en fonction de la PC1 qui correspond à une réponse IFN et nous permet de séparer les différents groupes. On calcule la corrélation ainsi que la p-value associé avec un cor_test.
-10 populations cellulaires ressortent significatives à V1.
-Pas de population significative à 6 mois.
+Nous regardons les fréquences en fonction de la PC1 qui correspond à une réponse IFN et nous permet de séparer les différents groupes. On calcule la corrélation ainsi que la p-value associé avec un cor_test.  
+10 populations cellulaires ressortent significatives à V1.  
+Pas de population significative à V4.  
+Pas de population significative à 6 mois.  
 
 victor.malassigne@inserm.fr
