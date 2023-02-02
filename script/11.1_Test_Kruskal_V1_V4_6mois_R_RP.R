@@ -27,9 +27,9 @@ data_V4_T_CD4_8 <- rbind(data, data_V4_T_CD4_8[T_F == T,])
 T_F <- data_6m$REPONSE %in% "R"
 data <- data_6m[T_F == T,]
 T_F <- data_6m$REPONSE %in% "RP"
-data <- rbind(data, data_6m[T_F == T,])
-T_F <- data_6m$REPONSE %in% "T"
 data_6m <- rbind(data, data_6m[T_F == T,])
+# T_F <- data_6m$REPONSE %in% "T"
+# data_6m <- rbind(data, data_6m[T_F == T,])
 
 
 data_V4_T_CD4_8[,9:62]<- lapply(data_V4_T_CD4_8[,9:62], as.numeric) 
@@ -203,7 +203,7 @@ nom_col <- names(data_6m[14:99])
 
 data_6m %>% sample_n_by(REPONSE, size = 1)
 data_6m <- data_6m %>%
-  reorder_levels(REPONSE, order = c("T", "R", "RP"))
+  reorder_levels(REPONSE, order = c( "R", "RP"))  ## "T",
 
 ### Test Kruskal Wallis + Dunn ----
 list_plot <- list()
@@ -244,5 +244,5 @@ for (i in nom_col) {
 plot_grid(plotlist = list_plot[1:6], ncol = 2) # pour orga ne nombre de plot sur la page
 
 p_all = plot_grid(plotlist = list_plot, ncol = 3)
-ggsave(filename = "result/kruskal_wallis_6_months_T_R_RP.pdf", plot = p_all, width = 25, height = 150, limitsize = F )
+ggsave(filename = "result/kruskal_wallis_6_months_R_RP.pdf", plot = p_all, width = 25, height = 150, limitsize = F )
 
