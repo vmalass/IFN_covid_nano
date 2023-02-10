@@ -13,7 +13,7 @@ data<- data[data$Reponse != "NC",] #supprime tout les NC
 
 data %>% sample_n_by(Reponse, size = 1)
 data <- data %>%
-  reorder_levels(Reponse, order = c( "NR","R", "RP"))
+  reorder_levels(Reponse, order = c( "NR","NR-","R","RP-", "RP", "A"))
 summary(data)
 
 print(data %>% 
@@ -37,7 +37,7 @@ pwc <- pwc %>% add_xy_position(x = "Reponse")
 print(ggboxplot(data, x = "Reponse", y = 'Age') +
         geom_point()+
         stat_pvalue_manual(pwc, hide.ns = TRUE) +
-        labs(
+        labs(title = "Age en fonction du groupe",
           subtitle = get_test_label(res.kruskal, detailed = TRUE),
           caption = get_pwc_label(pwc)))
 

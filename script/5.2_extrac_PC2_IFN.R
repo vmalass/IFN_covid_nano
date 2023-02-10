@@ -1,7 +1,7 @@
 rm(list = ls())
 
-name_DE_NR_R_HVG_all_VT1<- read.table("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/name_DE_NR_R_HVG_all_VT1.txt")
-name_DE_R_RP_HVG_all_VT2<- read.table("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/name_DE_R_RP_HVG_all_VT2.txt")
+name_DE_NR_R_HVG_all_VT1 <- read.table("data/gene_DE_NR_R_HVG_all_VT1_mat1.3.txt")
+name_DE_R_RP_HVG_all_VT2 <- read.table("data/gene_DE_R_RP_HVG_all_VT2_mat1.3.txt")
 load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
 Metadata <- mat_pat_clean[737:743]
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]

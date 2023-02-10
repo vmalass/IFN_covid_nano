@@ -1,8 +1,9 @@
 rm(list = ls())
 
-gene_DE_NR_R_HVG_all_VT1 <- read.table("data/gene_DE_NR_R_HVG_all_VT1_bis.txt")
-gene_DE_R_RP_HVG_all_VT2 <- read.table("data/gene_DE_R_RP_HVG_all_VT2_bis.txt")
-load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
+gene_DE_NR_R_HVG_all_VT1 <- read.table("data/gene_DE_NR_R_HVG_all_VT1_mat1.3.txt")
+gene_DE_R_RP_HVG_all_VT2 <- read.table("data/gene_DE_R_RP_HVG_all_VT2_mat1.3.txt")
+# load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
+load("data/1.2_mat_pat_clean.rds") #ouverture de la svg
 Metadata <- mat_pat_clean[737:743]
 mat_pat_clean_sans_R_T<-mat_pat_clean[20:160,]
 load("data/HVG_scran.rds") #ouverture de la svg
@@ -83,7 +84,7 @@ PC1_VT1 <- as.data.frame(SelectPCA$PC1)
 row.names(PC1_VT1) <- rownames(SelectPCA)
 all(rownames(PC1_VT1) == rownames(MataData_PCA))
 PC1_VT1 <- cbind(PC1_VT1, MataData_PCA)
-write.table(PC1_VT1, "/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT1_IFN_geneset.txt")
+write.table(PC1_VT1, "/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT1_IFN_geneset_mat1.2.txt")
 
 
 ## PCA VT2 gene IFN-------------------------------------------------------------
@@ -132,7 +133,7 @@ PC1_VT2 <- as.data.frame(SelectPCA$PC1)
 row.names(PC1_VT2) <- rownames(SelectPCA)
 all(rownames(PC1_VT2) == rownames(MataData_PCA))
 PC1_VT2 <- cbind(PC1_VT2, MataData_PCA)
-write.table(PC1_VT2, "/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT2_IFN_geneset.txt")
+write.table(PC1_VT2, "/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT2_IFN_geneset_mat1.2.txt")
 
 ## PCA VT gene IFN-------------------------------------------------------------
 ma<-mat_IFN$real_time_point %in% "REA"
@@ -179,7 +180,7 @@ PC1_VT2 <- as.data.frame(SelectPCA$PC1)
 row.names(PC1_VT2) <- rownames(SelectPCA)
 all(rownames(PC1_VT2) == rownames(MataData_PCA))
 PC1_VT2 <- cbind(PC1_VT2, MataData_PCA)
-write.table(PC1_VT2, "/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT_IFN_geneset.txt")
+write.table(PC1_VT2, "/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT_IFN_geneset_mat1.2.txt")
 
 
 
