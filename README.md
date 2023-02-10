@@ -1,6 +1,6 @@
 # Sommaire 
-- [NanoString_Covid](# NanoString_Covid)
-- [Recap projet Covid données NanoString](# Recap projet Covid données NanoString)
+- [NanoString_Covid](#NanoString_Covid)
+- [Recap projet Covid données NanoString](#Recap-projet-Covid-données-NanoString)
 - [Definitions des groupes](## Definitions des groupes)
 - [On refait l’analyse avec les nouveaux groupes](## On refait l’analyse avec les nouveaux groupes)
 - [Analyse des fréquences cellulaires à V1, V4 et 6 mois](## Analyse des fréquences cellulaires à V1, V4 et 6 mois)
