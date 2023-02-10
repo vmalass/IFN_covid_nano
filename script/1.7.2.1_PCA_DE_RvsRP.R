@@ -8,7 +8,7 @@ if (!require('factoextra')) install.packages('factoextra'); library('factoextra'
 rm(list = ls())
 # load("data/1.2_mat_pat_clean.rds") #ouverture de la svg
 load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
-gene_DE_R_RP_HVG_all_VT2 <- read.table("data/gene_DE_R_RP_HVG_all_VT2_bis.txt")
+gene_DE_R_RP_HVG_all_VT2 <- read.table("data/gene_DE_R_RP_HVG_all_VT2_mat1.3.txt")
 Metadata <- mat_pat_clean[737:743]
 
 # 3-creation du data------------------------------------------------------------
@@ -64,7 +64,7 @@ PC1_VT2 <- as.data.frame(SelectPCA$PC1)
 row.names(PC1_VT2) <- rownames(SelectPCA)
 all(rownames(PC1_VT2) == rownames(MataData_PCA))
 PC1_VT2 <- cbind(PC1_VT2, MataData_PCA)
-write.table(PC1_VT2, "data/PC1_VT2_gene_DE_RvsRP.txt")
+write.table(PC1_VT2, "data/PC1_VT2_gene_DE_RvsRP_mat1.3.txt")
 
 ggplot(PC1_VT2, aes(x =jours_prelevement , y = `SelectPCA$PC1`, color = REPONSE)) +
   geom_point(size = 3) + 
@@ -130,7 +130,7 @@ PC1_VT2 <- as.data.frame(SelectPCA$PC1)
 row.names(PC1_VT2) <- rownames(SelectPCA)
 all(rownames(PC1_VT2) == rownames(MataData_PCA))
 PC1_VT2 <- cbind(PC1_VT2, MataData_PCA)
-write.table(PC1_VT2, "data/PC1_VT_gene_DE_RvsRP.txt")
+write.table(PC1_VT2, "data/PC1_VT_gene_DE_RvsRP_mat1.3.txt")
 
 ggplot(PC1_VT2, aes(x =jours_prelevement , y = `SelectPCA$PC1`, color = REPONSE, shape = real_time_point)) +
   geom_point(size = 3) + 

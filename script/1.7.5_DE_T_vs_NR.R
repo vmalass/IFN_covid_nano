@@ -65,4 +65,5 @@ res_T_NR <- lfcShrink(dds_mat, coef = "condition_T_vs_NR", type = "apeglm", lfcT
 T_NR <- res_T_NR[res_T_NR$svalue < 0.05 & !is.na(res_T_NR$svalue) & res_T_NR$log2FoldChange > 1 | res_T_NR$svalue < 0.05 & !is.na(res_T_NR$svalue) & res_T_NR$log2FoldChange < -1 , ]   #tris des genes avec sval<5% et L2FC <-1 & >1
 T_NR_all_gene <- as.data.frame(T_NR)
 
-T_NR_all_gene  ### 1 gène DE : LILRA3
+T_NR_all_gene  ### 1 gène DE : LILRA3 (49-50 en NR)
+
