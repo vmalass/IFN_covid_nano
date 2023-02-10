@@ -64,31 +64,108 @@ res <- results(dds_mat, contrast=c("condition", "R", "RP"))
 res_R_RP <- lfcShrink(dds_mat, coef = "condition_R_vs_RP", type = "apeglm", lfcThreshold = 1) #resultat avec le calcule de la pval ajuste a partir de 1 et pas 0 (par rapport au threshold) : https://support.bioconductor.org/p/113664/
 
 R_RP <- res_R_RP[res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange > 1 | res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange < -1 , ]   #tris des genes avec sval<5% et L2FC <-1 & >1
-R_RP_all_gene <- as.data.frame(NR_R)
+R_RP_all_gene <- as.data.frame(R_RP)
 
 data_R_RP_VT3 <- assay(rld)[res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange > 1 | res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange < -1 , ]    #tris des genes avec sval<5% et L2FC <-1 & >1 + utilisation de assay(rld) pour passer en log
 
 annC_VT3_DE <- data.frame(condition= coldata_mat)
 rownames(annC_VT3_DE) <- colnames(data_R_RP_VT3)
 
-heatmap_R_RP_VT3 <- pheatmap(data_R_RP_VT3, 
-                             scale="row", 
-                             fontsize = 15,
-                             fontsize_row=15, 
-                             fontsize_col = 15,
-                             annotation_col = annC_VT3_DE,
-                             annotation_colors = list(condition = c( NR = "#7570BE",
-                                                                     R="#F15854",
-                                                                     RP = "#882255",
-                                                                     "T"= "#117733" )),
-                             color = my_palette, 
-                             cutree_rows = 2,
-                             main = "DE à partir de tout les gènes et des prélèvements VT3 avec RvsRP", 
-                             labels_col = coldata_num,
-                             cluster_cols = T,
-                             cluster_rows = T,) 
+pheatmap(data_R_RP_VT3, 
+         scale="row", 
+         fontsize = 15,
+         fontsize_row=16, 
+         fontsize_col = 15,
+         # annotation_colors = list(condition = c( NR = "#7570BE",
+         #                                                R="#F15854",
+         #                                                RP = "#882255",
+         #                                                "T"= "#117733" )),
+         annotation_colors = list(condition = c(NR = "darkorange",
+                                                       `NR-` = "#DDCC77",
+                                                       R = "cornflowerblue",
+                                                       `RP-` = "#882255" ,
+                                                       RP = "brown3", 
+                                                       `T` = "chartreuse4", 
+                                                       A = "#BBBBBB")),
+         annotation_col = annC_VT3_DE,
+         color = my_palette, 
+         cutree_rows = 2,
+         main = "DE à partir de tout les gènes et des prélèvements VT3 avec RvsRP", 
+         labels_col = coldata_num,
+         cluster_cols = T,
+         cluster_rows = T,)
 
 
 
+# 4-DE R vs RP en VT3 HVG-------------------------------------------------------
+## 4.1-Creation de la matrice---------------------------------------------------
+
+mat_VT3 <- mat_pat_clean[which(mat_pat_clean$real_time_point %in% "VT3"),] 
+
+mat_VT3<- arrange(mat_VT3,numero_patient) #ordo par n° pat
+
+coldata_num<- mat_VT3$numero_patient
+
+top.hvgs<-as.data.frame(top.hvgs)    ##creation d'un DF
+test <- colnames(mat_VT3) %in% top.hvgs$V1  #creation d'un vecteur logique T F, les T correspondent au nom identique dans les deux
+mat_HVG<- mat_VT3[,test==T]   #ne garde en colone que les True
+
+all(rownames(mat_HVG) == rownames(mat_VT3)) #verif ordre identique
+all(top.hvgs$V1 %in% colnames(mat_HVG)) #verif contient bien les meme nom de genes
+
+coldata_mat<-as.data.frame(mat_VT3$REPONSE)
+row.names(coldata_mat)<-row.names(mat_VT3)
 
 
+## 4.2-Gene DE DESeq2 HVG-------------------------------------------------------
+colnames(coldata_mat)<-"condition"
+
+dds_mat <- DESeqDataSetFromMatrix(countData = t(mat_HVG), colData = coldata_mat,
+                                  design = ~ condition) #creation de l'obj deseq2
+
+dds_mat <- dds_mat[rowSums(counts(dds_mat)) >= 10,] #pre-filtrage sup les genes inf ou egale a 10
+
+rld <- rlogTransformation(dds_mat, blind=FALSE) #transforme le dds en log pour utilisation en heatmap
+
+
+##### R
+dds_mat$condition <- relevel(dds_mat$condition, ref = "RP")
+dds_mat <- DESeq(dds_mat)
+resultsNames(dds_mat)
+res <- results(dds_mat, contrast=c("condition", "R", "RP"))
+res <- as.data.frame(res)
+
+# RP vs R
+res_R_RP <- lfcShrink(dds_mat, coef = "condition_R_vs_RP", type = "apeglm", lfcThreshold = 1) #resultat avec le calcule de la pval ajuste a partir de 1 et pas 0 (par rapport au threshold) : https://support.bioconductor.org/p/113664/
+
+R_RP <- res_R_RP[res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange > 1 | res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange < -1 , ]   #tris des genes avec sval<5% et L2FC <-1 & >1
+R_RP_HVG <- as.data.frame(R_RP)
+
+data_R_RP_VT3 <- assay(rld)[res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange > 1 | res_R_RP$svalue < 0.05 & !is.na(res_R_RP$svalue) & res_R_RP$log2FoldChange < -1 , ]    #tris des genes avec sval<5% et L2FC <-1 & >1 + utilisation de assay(rld) pour passer en log
+
+annC_VT3_DE <- data.frame(condition= coldata_mat)
+rownames(annC_VT3_DE) <- colnames(data_R_RP_VT3)
+
+pheatmap(data_R_RP_VT3, 
+         scale="row", 
+         fontsize = 17,
+         fontsize_row=17, 
+         fontsize_col = 17,
+         # annotation_colors = list(condition = c( NR = "#7570BE",
+         #                                                R="#F15854",
+         #                                                RP = "#882255",
+         #                                                "T"= "#117733" )),
+         annotation_colors = list(condition = c(NR = "darkorange",
+                                                `NR-` = "#DDCC77",
+                                                R = "cornflowerblue",
+                                                `RP-` = "#882255" ,
+                                                RP = "brown3", 
+                                                `T` = "chartreuse4", 
+                                                A = "#BBBBBB")),
+         annotation_col = annC_VT3_DE,
+         color = my_palette, 
+         cutree_rows = 2,
+         main = "DE à partir des HVG et des prélèvements VT3 avec RvsRP", 
+         labels_col = coldata_num,
+         cluster_cols = T,
+         cluster_rows = T,)
