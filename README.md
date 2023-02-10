@@ -1,13 +1,13 @@
 # Sommaire 
 - [NanoString_Covid](#NanoString_Covid)
 - [Recap projet Covid données NanoString](#Recap-projet-Covid-données-NanoString)
-- [Definitions des groupes](## Definitions des groupes)
-- [On refait l’analyse avec les nouveaux groupes](## On refait l’analyse avec les nouveaux groupes)
-- [Analyse des fréquences cellulaires à V1, V4 et 6 mois](## Analyse des fréquences cellulaires à V1, V4 et 6 mois)
-- [PCA pour séparation des groupes](### PCA pour séparation des groupes)
-- [Récapitulatif nombre de patients par expériences](### Récapitulatif nombre de patients par expériences)
-- [Corrélation](### Corrélation)
-- [Test stat Krukal-Wallis et Dunn entre R et RP](### Test stat Krukal-Wallis et Dunn entre R et RP)
+- [Definitions des groupes](##Definitions-des-groupes)
+- [On refait l’analyse avec les nouveaux groupes](##On-refait-l’analyse-avec-les-nouveaux-groupes)
+- [Analyse des fréquences cellulaires à V1, V4 et 6 mois](##Analyse-des-fréquences-cellulaires-à-V1,-V4-et-6-mois)
+- [PCA pour séparation des groupes](###PCA-pour-séparation-des-groupes)
+- [Récapitulatif nombre de patients par expériences](###Récapitulatif-nombre-de-patients-par-expériences)
+- [Corrélation](###Corrélation)
+- [Test stat Krukal-Wallis et Dunn entre R et RP](###Test-stat-Krukal-Wallis-et-Dunn-entre-R-et-RP)
 
 # NanoString_Covid
 Data issu des données NanoString du papier ([Early nasal type I IFN immunity against SARS-CoV-2 is compromised in patients with autoantibodies against type I IFNs](https://doi.org/10.1084/jem.20211211)).  
