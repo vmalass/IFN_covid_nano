@@ -1,0 +1,170 @@
+---
+title: "Plotly"
+author: "Malassigne_Victor"
+date: "2/28/2023"
+output: 
+  html_document:
+    number_sections: true
+    toc: yes
+    toc_depth: 3
+---
+
+# Library
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = T,out.width = "100%", fig.height=7, fig.width=12, fig.align="center")
+library(plotly)
+library(readxl)
+library(ggrepel)
+# 
+```
+
+# import data
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+rm(list = ls())
+set.seed(123)
+
+Freq_V1_V4_R_RP <- read_xlsx("~data/Freq_V1_V4_R_RP.xlsx")
+
+Meta_data <- Freq_V1_V4_R_RP[,1:5]
+data <- Freq_V1_V4_R_RP[,6:75]
+```
+
+# PCA
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+PCA <- prcomp(data, scale. = T)
+print(summary(PCA))
+
+explained_variance_ratio <- 100*summary(PCA)[["importance"]]['Proportion of Variance',]
+
+a <- data.frame(summary(PCA)[["importance"]]['Cumulative Proportion',])
+a <- mutate(a, PC = c(1:17))
+colnames(a) <- c("importance", "PC")
+p <- ggplot(a, aes(x = PC, y = importance)) +
+  geom_point()
+
+SelectPCA <- data.frame(PCA$x)
+
+Merge_Meta_PCA <- cbind(Meta_data, SelectPCA)
+
+ggplotly(p)
+```
+
+## Visualization
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+axis = list(showline=FALSE,
+            zeroline=FALSE,
+            gridcolor='#ffff',
+            ticklen=4,
+            titlefont=list(size=13))
+
+
+fig <- Merge_Meta_PCA %>%
+  plot_ly()  %>%
+  add_trace(
+    type = 'splom',
+    dimensions = list(
+      list(label=paste('PC 1 (',toString(round(explained_variance_ratio[1],1)),'%)',sep = ''), values=~PC1),
+      list(label=paste('PC 2 (',toString(round(explained_variance_ratio[2],1)),'%)',sep = ''), values=~PC2),
+      list(label=paste('PC 3 (',toString(round(explained_variance_ratio[3],1)),'%)',sep = ''), values=~PC3),
+      list(label=paste('PC 4 (',toString(round(explained_variance_ratio[4],1)),'%)',sep = ''), values=~PC4)
+    ),
+    color = ~Merge_Meta_PCA$Responder, colors = c("#FC4E07", "blue")
+  ) %>%
+  style(diagonal = list(visible = FALSE)) %>%
+  layout(
+    legend=list(title=list(text='color')),
+    hovermode='closest',
+    dragmode= 'select',
+    plot_bgcolor='rgba(240,240,240, 0.95)',
+    xaxis=list(domain=NULL, 
+               showline=F, 
+               zeroline=F, 
+               gridcolor='#ffff', 
+               ticklen=4),
+    yaxis=list(domain=NULL, 
+               showline=F, 
+               zeroline=F, 
+               gridcolor='#ffff', 
+               ticklen=4),
+    xaxis2=axis,
+    xaxis3=axis,
+    xaxis4=axis,
+    yaxis2=axis,
+    yaxis3=axis,
+    yaxis4=axis
+  )
+fig
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+fig <- plot_ly(Merge_Meta_PCA, 
+               x = ~PC1, 
+               y = ~PC2, 
+               color = ~Merge_Meta_PCA$Responder, 
+               colors = c("#FC4E07", "blue"), 
+               type = 'scatter', 
+               mode = 'markers', 
+               size = 5)%>%
+  layout(
+    legend=list(title=list(text='color')),
+    plot_bgcolor='#rgba(240,240,240, 0.95)',
+    xaxis = list(
+      # title = "0",
+      zerolinecolor = "#ffff",
+      zerolinewidth = 2,
+      gridcolor='#ffff'),
+    yaxis = list(
+      # title = "1",
+      zerolinecolor = "#ffff",
+      zerolinewidth = 2,
+      gridcolor='#ffff'))
+  
+fig
+
+
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+fig <- plot_ly(Merge_Meta_PCA, 
+               x = ~PC1, 
+               y = ~PC2, 
+               z = ~PC3, 
+               color = ~Merge_Meta_PCA$Responder, 
+               colors = c("#FC4E07", "blue"),
+               marker = list(size = 7)) %>%
+  add_markers(size = 12) %>%
+  layout( scene = list(bgcolor = "rgba(240,240,240, 0.95)")
+  )
+
+fig
+
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+label<- as.character(Merge_Meta_PCA$numero_patient_victor)
+
+p <- ggplot(Merge_Meta_PCA, aes(x = PC1, y = PC2, color = Responder, label = label)) +
+  geom_point(size = 3) + 
+  scale_shape()+
+  geom_text_repel(show.legend = F,
+                  max.overlaps  = 5,
+                  size = 5)	+
+  scale_color_manual(breaks = c("NR", "NR-", "R", "RP-", "RP", "T", "A"),
+                     values = c("#7570BE", "darkorange","cornflowerblue",
+                                "#882255" ,"brown3", "chartreuse4", "#BBBBBB")) +
+  labs(title="PCA à partir des clusters non supervisé de V4",
+       x = "PC1 = 21.6%",
+       y = "PC2 = 19.9%") + 
+  theme(plot.title = element_text(size=24),
+        axis.title = element_text(size = 24),
+        axis.text = element_text(size = 18),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+ggplotly(p)
+
+```
+
