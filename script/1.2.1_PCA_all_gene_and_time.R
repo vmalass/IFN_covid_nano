@@ -54,3 +54,6 @@ ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, color = real_time_point, shape = REPO
         axis.title = element_text(size = 24),
         legend.title = element_text(size=15),
         legend.text = element_text(size=15))
+
+
+

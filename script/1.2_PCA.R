@@ -80,9 +80,99 @@ mat_VT1<-mat_pat_clean[mat_VT1==T,]
 
 MataData_PCA <- mat_VT1[,737:742]
 mat_PCA<- mat_VT1[,1:736]
+rownames(mat_PCA) <- MataData_PCA$numero_patient
 mat_PCA<-scale(mat_PCA)
 PCA<- prcomp(mat_PCA, scale. = F)
+
 fviz_eig(PCA, main="PCA VT1", addlabels = TRUE)
+
+fviz_pca_var(PCA,
+             col.var = "contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE, # Avoid text overlapping
+             select.var = list(contrib = 40),
+             alpha.var="contrib") +
+  ggtitle(label = "Contribution des 40 premières variables dans les PC1 et PC2") +
+  theme_minimal() +
+  theme(plot.title = element_text(size=30),
+        axis.title = element_text(size = 24),
+        axis.text.y = element_text(size = 14),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+
+
+
+fviz_contrib(PCA, choice = "ind", axes = 1) + coord_flip()+
+  labs(title="Comtribution des patients dans la PC1 (31,8%)",
+       x = "Patient n°") +
+  theme(plot.title = element_text(size=30),
+        axis.title = element_text(size = 24),
+        axis.text.y = element_text(size = 14),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+fviz_contrib(PCA, choice = "ind", axes = 2) + coord_flip()+
+  labs(title="Comtribution des patients dans la PC2 (13,9%)",
+       x = "Patient n°") +
+  theme(plot.title = element_text(size=30),
+        axis.title = element_text(size = 24),
+        axis.text.y = element_text(size = 14),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+fviz_contrib(PCA, choice = "ind", axes = 1:2) + coord_flip()+
+  labs(title="Comtribution des patients dans la PC1&2",
+       x = "Patient n°") +
+  theme(plot.title = element_text(size=30),
+        axis.title = element_text(size = 24),
+        axis.text.y = element_text(size = 14),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+
+
+
+fviz_contrib(PCA, choice = "var", axes = 1, top = 50) + coord_flip()+
+  labs(title="Comtribution des 50 premières variable dans la PC1 (31,8%)",
+       x = "Gènes") +
+  theme(plot.title = element_text(size=30),
+        axis.title = element_text(size = 24),
+        axis.text.y = element_text(size = 14),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+fviz_contrib(PCA, choice = "var", axes = 2, top = 50) + coord_flip() +
+  labs(title="Comtribution des 50 premières variable dans la PC2 (13,9%)",
+       x = "Gènes") +
+  theme(plot.title = element_text(size=30),
+        axis.title = element_text(size = 24),
+        axis.text.y = element_text(size = 14),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+fviz_contrib(PCA, choice = "var", axes = 1:2, top = 50) + coord_flip() +
+  labs(title="Comtribution des 50 premières variable dans la PC1&2 ",
+       x = "Gènes") +
+  theme(plot.title = element_text(size=30),
+        axis.title = element_text(size = 24),
+        axis.text.y = element_text(size = 14),
+        legend.title = element_text(size=15),
+        legend.text = element_text(size=15))
+
+### Extraction des valeurs de PC (var ou ind)
+var <- get_pca(PCA, "var")
+var$coord
+dat <- as.data.frame(var$contrib)
+
+
+
+
+
+
+
+
+
 SelectPCA<- as.data.frame(PCA$x)
 mergeMetaAPC<- as.data.frame(cbind(SelectPCA, MataData_PCA))
 label<- as.character(mergeMetaAPC$numero_patient)
