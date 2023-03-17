@@ -2,6 +2,7 @@ rm(list = ls())
 
 gene_DE_NR_R_HVG_all_VT1 <- read.table("data/gene_DE_NR_R_HVG_all_VT1_mat1.3.txt")
 gene_DE_R_RP_HVG_all_VT2 <- read.table("data/gene_DE_R_RP_HVG_all_VT2_mat1.3.txt")
+DE_VT1_T <- read.table("data/gene_DE_VT1_T_all_gene_mat1.3.txt")
 # load("data/1.3_mat_pat_clean_final.rds") #ouverture de la svg
 load("data/1.2_mat_pat_clean.rds") #ouverture de la svg
 Metadata <- mat_pat_clean[737:743]
@@ -189,7 +190,17 @@ write.table(PC1_VT2, "/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/
 
 
 
+# DE_VT1_T commun IFN geneset---------------------------------------------------
+### REACTOME_INTERFERON_SIGNALING ###
+a <- read_tsv('data/REACTOME_INTERFERON_SIGNALING.v2022.1.Hs.tsv')
+members <- a[19,2]
+members <- str_split(members, ',')
+members <- as.data.frame(members[[1]])
 
+
+inter <- intersect(members$`members[[1]]`, DE_VT1_T$name_VT1_T_all_gene)
+diff <- setdiff( DE_VT1_T$name_VT1_T_all_gene, inter)
+print(paste0("Sur les ", length(t(members)), " gènes du gene set IFN, ", length(inter), " sont dans le jeu de donnée"))
 
 
 
