@@ -47,7 +47,7 @@ data_fi$jours_prelevement <- as.numeric(data_fi$jours_prelevement)
 setdiff(data_V1$numero_patient_nanostring, data_fi$numero_patient)
 ## ne manque pas de patient
 
-namevars_to_plot <- names(data_fi[8:50])
+namevars_to_plot <- names(data_fi[8:56])
 
 list_plot <- list()
 for (namevar_i in namevars_to_plot) {
@@ -79,7 +79,7 @@ ggsave(filename = "result/main_subset_V1_sup_jour_prelevement_T.pdf", plot = p_a
 ### Calcule des correlations & save ###
 ma <- data_fi$REPONSE %in% "T"
 data_fi <- data_fi[ma == F,]
-matcor <- cbind(data_fi$`Age_à_S1`, data_fi[11:50])
+matcor <- cbind(data_fi$`Age_à_S1`, data_fi[8:56])
 colnames(matcor)[1] <- "age"
 
 ### correlation with p-value ###
@@ -111,7 +111,7 @@ data_fi <- inner_join(data_V1, PC1_V1, by = c("numero_patient_nanostring" = "num
 setdiff(data_V1$numero_patient_nanostring, data_fi$numero_patient)
 ## ne manque pas de patient
 
-namevars_to_plot <- names(data_fi[8:50])
+namevars_to_plot <- names(data_fi[8:56])
 
 list_plot <- list()
 for (namevar_i in namevars_to_plot) {
@@ -141,7 +141,7 @@ ggsave(filename = "result/main_subset_V1_sup_PC1.pdf", plot = p_all, width = 20,
 
 ### 3.2.1 VT1 correlation-------------------------------------------------------
 ### Calcule des correlations & save ###
-matcor <- cbind(data_fi$`Age_à_S1`, data_fi[11:50])
+matcor <- cbind(data_fi$`Age_à_S1`, data_fi[8:56])
 colnames(matcor)[1] <- "age"
 
 ### correlation with p-value ###
@@ -313,6 +313,15 @@ write.xlsx(dat, file = "result/correlation_pvalue_main_subset_V1_non_sup_PC1.xls
 # .o
 # .o
 # .o
+
+
+
+
+
+
+
+
+
 
 
 

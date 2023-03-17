@@ -15,7 +15,8 @@ data_V1 <- read_xlsx("/Users/victor/Documents/JM/NanoString/Data_brut/Covid_IFN-
 data_V4 <- read_xlsx("/Users/victor/Documents/JM/NanoString/Data_brut/Covid_IFN-avec_data_V5.xlsx",10)
 data_V4_T_CD4_8<- read_xlsx("/Users/victor/Documents/JM/NanoString/Data_brut/Covid_IFN-avec_data_V5.xlsx",11)
 data_V4_CD4_8_Agspe <- read_xlsx("/Users/victor/Documents/JM/NanoString/Data_brut/Covid_IFN-avec_data_V5.xlsx",12)
-data_6m <- read_xlsx("/Users/victor/Documents/JM/NanoString/Data_brut/Covid_IFN-avec_data_V5.xlsx",13)
+data_V4_T <- read_xlsx("/Users/victor/Documents/JM/NanoString/Data_brut/Covid_IFN-avec_data_V5.xlsx",13)
+data_6m <- read_xlsx("/Users/victor/Documents/JM/NanoString/Data_brut/Covid_IFN-avec_data_V5.xlsx",14)
 
 T_F <- data_V1$REPONSE %in% "R"
 data <- data_V1[T_F == T,]
@@ -41,6 +42,11 @@ data <- data_V4_T_CD4_8[T_F == T,]
 T_F <- data_V4_T_CD4_8$Responder %in% "RP"
 data_V4_T_CD4_8 <- rbind(data, data_V4_T_CD4_8[T_F == T,])
 
+T_F <- data_V4_T$Responder %in% "R"
+data <- data_V4_T[T_F == T,]
+T_F <- data_V4_T$Responder %in% "RP"
+data_V4_T <- rbind(data, data_V4_T[T_F == T,])
+
 T_F <- data_6m$REPONSE %in% "R"
 data <- data_6m[T_F == T,]
 T_F <- data_6m$REPONSE %in% "RP"
@@ -61,6 +67,72 @@ data_V4_T_CD4_8_stim <- data_V4_T_CD4_8[data_True_false==F,]
 
 
 # 3 Test stat Kruskal Wallis----------------------------------------------------
+## 3.0 data_V4_T---------------------------------------------------------------- 
+max(colSums(is.na(data_V4_T))) # verif valleur manquante
+
+nom_col <- names(data_V4_T[8:44])
+
+data_V4_T %>% sample_n_by(Responder, size = 1)
+data_V4_T <- data_V4_T %>%
+  reorder_levels(Responder, order = c("R", "RP"))
+
+### Test Kruskal Wallis + Dunn ----
+list_plot <- list()
+for (i in nom_col) {
+  # suppression des NA dans la variable
+  variable<-as.data.frame(data_V4_T[i])
+  variable$Responder<-data_V4_T$Responder
+  variable<-na.omit(variable)
+  
+  # Repartition dans la variable
+  # print(variable %>% 
+  #         group_by(Responder) %>%
+  #         get_summary_stats(`i`, type = "common"))
+  
+  # Calculs
+  res.kruskal <- variable %>% kruskal_test(formula(paste0("`" , i , "`"," ~ Responder")))
+  # print(res.kruskal)
+  
+  # Taille de l’effet
+  res.dunn <- variable %>% kruskal_effsize(formula(paste0("`" , i , "`"," ~ Responder")))
+  # print(res.dunn)
+  # Comparaisons par paires test de Dunn
+  pwc <- variable %>% 
+    dunn_test(formula(paste0("`" , i , "`"," ~ Responder")), p.adjust.method = "bonferroni") 
+  # print(pwc)
+  
+  # Visualisation : Boxplots avec p-values
+  pwc <- pwc %>% add_xy_position(x = "Responder")
+  p_i <- ggboxplot(variable, x = "Responder", y = paste0("`" , i , "`")) +geom_point(colour = "gray70") +
+    stat_pvalue_manual(pwc, hide.ns = TRUE) +
+    labs(title = formula(paste0("`" , i , "`"," ~ Responder")),
+         subtitle = get_test_label(res.kruskal, detailed = TRUE),
+         caption = get_pwc_label(pwc))
+  
+  list_plot[[i]] <- p_i
+}
+
+plot_grid(plotlist = list_plot[1:6], ncol = 2) # pour orga ne nombre de plot sur la page
+
+p_all = plot_grid(plotlist = list_plot, ncol = 3)
+ggsave(filename = "result/kruskal_wallis_V4_T_R_RP.pdf", plot = p_all, width = 20, height = 50, limitsize = F )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 3.0 data_V4_no_stim supervise---------------------------------------------------------- 
 max(colSums(is.na(data_V4_no_stim))) # verif valleur manquante
 
