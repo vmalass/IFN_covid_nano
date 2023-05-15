@@ -149,15 +149,17 @@ data_fi <- inner_join(PC1_VT_IFN_geneset, PC1_VT_gene_DE_VT1vsT, by = c("jours_p
                                                                      "REPONSE"="REPONSE")) %>%
   mutate(label_patient = as.character(numero_patient))
 
+data_fi <- data_fi[data_fi$REPONSE != "NR",]
+
 test_cor <- cor.test(data_fi$SelectPCA.PC1.x, data_fi$SelectPCA.PC1.y, method= "pearson")
 options( "digits"=3)
-ggplot(data_fi, aes(x = SelectPCA.PC1.x, y = SelectPCA.PC1.y, label = label_patient)) + 
-  geom_point(aes(color = REPONSE, shape = real_time_point), 
-             size = 3)+
-  geom_text_repel(# nudge_x=0.6,
-    # nudge_y=0.15,
-    show.legend = F,
-    max.overlaps  = Inf)+
+ggplot(data_fi, aes(x = SelectPCA.PC1.x, y = SelectPCA.PC1.y)) + #, label = label_patient
+  geom_point(aes(color = REPONSE),  #, shape = real_time_point
+             size = 5)+
+  # geom_text_repel(# nudge_x=0.6,
+  #   # nudge_y=0.15,
+  #   show.legend = F,
+  #   max.overlaps  = Inf)+
   scale_color_manual(breaks = c("NR","R","RP","T"),
                      values = c("darkorange","cornflowerblue","brown3","chartreuse4"))+
   # scale_color_manual(breaks = c("NR", "NR-", "R", "RP-", "RP", "T", "A"),
@@ -166,7 +168,7 @@ ggplot(data_fi, aes(x = SelectPCA.PC1.x, y = SelectPCA.PC1.y, label = label_pati
   # geom_smooth(method = lm, se = FALSE) +
   geom_rug(aes(color = REPONSE)) +
   annotate(geom="text", 
-           x=10, 
+           x=13, 
            y=0, 
            label= paste0("cor ",round(test_cor$estimate, 2), " pvalue ", signif(test_cor$p.value, 3)),
            color="red",
@@ -176,8 +178,8 @@ ggplot(data_fi, aes(x = SelectPCA.PC1.x, y = SelectPCA.PC1.y, label = label_pati
        y = "PC1_VT_gene_DE_VT1vsT") + 
   theme(plot.title = element_text(size=30),
         axis.title = element_text(size=24),
-        legend.title = element_text(size=15), 
-        legend.text = element_text(size=15))
+        legend.title = element_text(size=20), 
+        legend.text = element_text(size=20))
 
 
 

@@ -21,6 +21,7 @@ library(forcats)
 library(scales)
 library(pheatmap)
 library(apeglm)
+library(ggrepel)
 
 # 2-ouverture des fichier-------------------------------------------------------
 rm(list = ls())
@@ -108,7 +109,7 @@ pheatmap(mat_DE_VT1_T_all,
          color = my_palette, 
          cutree_rows = 2,
          cutree_cols = 2,
-         main = "DE from all genes with VT1vsT to VT1", 
+         main = "Gene expression at VT1", 
          labels_col = coldata_num,
          cluster_cols = T,
          cluster_rows = T,
@@ -152,7 +153,7 @@ pheatmap(mat_DE_VT1_T_all,
          color = my_palette, 
          cutree_rows = 2,
          cutree_cols = 2,
-         main = "DE from all genes with VT1vsT to VT2", 
+         main = "Gene expression at VT2", 
          labels_col = coldata_num,
          cluster_cols = T,
          cluster_rows = T,
@@ -230,18 +231,20 @@ PC1_VT1 <- cbind(PC1_VT1, MataData_PCA)
 
 ma <- PC1_VT1$REPONSE %in% "Other"
 PC1_VT1 <- PC1_VT1[ma == F,]
+ma <- PC1_VT1$REPONSE %in% "NR"
+PC1_VT1 <- PC1_VT1[ma == F,]
 
-ggplot(PC1_VT1, aes(x =jours_prelevement , y = `SelectPCA$PC1`, color = REPONSE, shape = real_time_point, label = label)) +
-  geom_point(size = 3) + 
+ggplot(PC1_VT1, aes(x =jours_prelevement , y = `SelectPCA$PC1`, color = REPONSE)) + #, shape = real_time_point, label = label
+  geom_point(size = 5) + 
   # geom_boxplot() +
-  scale_shape()+
-  geom_text_repel(show.legend = F,
-                  max.overlaps  = Inf, 
-                  size = 5)	+
+  # scale_shape()+
+  # geom_text_repel(show.legend = F,
+  #                 max.overlaps  = Inf, 
+  #                 size = 5)	+
   scale_color_manual(breaks = c("R", "RP", "T", "Other"),
                      values = c("cornflowerblue", "brown3", "chartreuse4", "#BBBBBB")) +
-  labs(title="PCA à partir de tous les prelevements et des genes DE VT1vsT en fonction des jours de prélèvement",
-       x = "jours après début des symptômes",
+  labs(title="PCA all time points with DE VT1vsT gene according to the day after onset of symptoms",
+       x = "days after onset of symptoms",
        y = "PC1") + 
   theme(plot.title = element_text(size=24),
         axis.title = element_text(size = 24),

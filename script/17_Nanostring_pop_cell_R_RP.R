@@ -547,6 +547,48 @@ plot_grid(a, b, c,
           ncol = 2, nrow = 2)  # Plot avec 3 figures
 
 
+## Jacqueline marker----------------------------------------------------------------------
+
+gene <- c("IL18",
+          "IL18BP",
+          "IL18R1",
+          "IL18RAP",
+          "IL12A",
+          "IL12B",
+          "IL12RB1",
+          "IL12RB2")
+
+T_F <- colnames(mat_pat_clean_sans_REA) %in% gene
+mat_macro <- mat_pat_clean_sans_REA[, T_F == T]
+
+mat_macro <- cbind(mat_macro, mat_pat_clean_sans_REA[,737 : 743])
 
 
+a <- ggplot(mat_macro, aes(x = REPONSE, y = IL18, fill = real_time_point)) +
+  geom_violin()
 
+b <- ggplot(mat_macro, aes(x = REPONSE, y = IL18BP, fill = real_time_point)) +
+  geom_violin()
+
+c <- ggplot(mat_macro, aes(x = REPONSE, y = IL18R1, fill = real_time_point)) +
+  geom_violin()
+
+d <- ggplot(mat_macro, aes(x = REPONSE, y = IL18RAP, fill = real_time_point)) +
+  geom_violin()
+
+e <- ggplot(mat_macro, aes(x = REPONSE, y = IL12A, fill = real_time_point)) +
+  geom_violin()
+
+f <- ggplot(mat_macro, aes(x = REPONSE, y = IL12B, fill = real_time_point)) +
+  geom_violin()
+
+g <- ggplot(mat_macro, aes(x = REPONSE, y = IL12RB1, fill = real_time_point)) +
+  geom_violin()
+
+h <- ggplot(mat_macro, aes(x = REPONSE, y = IL12RB2, fill = real_time_point)) +
+  geom_violin()
+
+
+plot_grid(a, b, c, d, e, f, g, h,
+          labels=c("A", "B", "C", "D", "E", "F", "G", "H"), 
+          ncol = 3, nrow = 3)  # Plot avec 3 figures
