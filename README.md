@@ -2,11 +2,11 @@
 
 This study examines the transcriptomic responses of COVID-19 patients at different stages of infection. The study reveals distinct gene expression dynamics that allow patients classification. Two main groups were investigated, based on the duration of the transcriptomic interferons response: responders (R) and persistent responders (RP). Quantifications of circulating interferons unveil an increased production of interferon gamma in persistent responders. Moreover, notable variations in the frequency and roles of CD8+ TEMRA or exhausted T lymphocytes are observed between the R and RP groups, along with higher long-term IFN-γ production in RP. The findings underscore the significance of the interferon response while delineating distinct nuances in patient immune dynamics through these two groups. This contributes to a better understanding of responses to COVID-19 infection.
 
-(result/Kinetic_RSAD2.pdf)
+![RSAD2 Kinetic](result/Kinetic_RSAD2.pdf)
 
 # NanoString_Covid
 Data issu des données NanoString du papier ([Early nasal type I IFN immunity against SARS-CoV-2 is compromised in patients with autoantibodies against type I IFNs](https://doi.org/10.1084/jem.20211211)).  
-800 gènes étudiers sur 72 patients avec 12 REA covid+, 47 covid, 7 Hcov et 7 témoins.  
+800 gènes étudiés sur 72 patients avec 12 REA covid+, 47 covid, 7 Hcov et 7 témoins.  
 
 # Recap projet Covid données NanoString
 - Echelle de temps VT1 J1 à J6, VT2 J7 à J13, VT3 J14 à J20, VT4 J21 à …
