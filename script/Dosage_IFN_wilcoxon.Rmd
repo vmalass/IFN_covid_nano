@@ -1,0 +1,198 @@
+---
+title: "Dosage IFN"
+author: "Malassigne_Victor"
+date: "7/7/2023"
+output: 
+  html_document:
+    number_sections: true
+    toc: yes
+    toc_depth: 3
+---
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+library(ggplot2)
+library(ggrepel)
+library(rstatix)
+library(ggpubr)
+library(dplyr)
+```
+
+
+# Import data
+Répartion des échantillons dans les time points selon le groupe (R ou RP)
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+rm(list = ls())
+
+data <- read_xlsx("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/Dosage_IFN.xlsx", sheet = 2)
+data_2 <- read_xlsx("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/Dosage_IFN.xlsx", sheet = 5)
+
+T_F <- data$Reponse %in% c("R", "RP")
+data_fi <- data[T_F == T,]
+
+T_F <- data_2$Reponse %in% c("R", "RP")
+data_fi_2 <- data_2[T_F == T,]
+
+data_fi[,1:3] <- lapply(data_fi[,1:3], as.numeric)
+
+tab <- data_fi %>%
+  count(Reponse, new_time_point)  #numero_patient_victor
+
+tab <- tab %>% 
+  rename("nombre echantillon" = "n")
+
+tab_2 <- data_fi_2 %>%
+  count(Reponse, new_time_point)  #numero_patient_victor
+
+tab_2 <- tab_2 %>% 
+  rename("nombre echantillon" = "n")
+
+print("Data pour IFN-alpha/beta/l1-IL29")
+print(tab)
+
+print("Data pour IFN-alpha2")
+print(tab_2)
+print("impossible de faire une étude...")
+
+vector <- c("VT1", "VT2", "VT3", "VT4")
+```
+
+# Visualisation IFN
+## IFN-l1 IL-29
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = data_fi, 
+       aes(x = new_time_point, 
+           y = `IFN_l1_IL_29`, 
+           color = Reponse))+ 
+  geom_boxplot() +
+  geom_point(position = position_dodge(width=0.75)) +
+  scale_color_manual(breaks = c("R", "RP"),
+                     values = c("gray50","#CB2027")) +
+  labs(title = "Wilcoxon test for title IFN-l1 IL-29", 
+       x = "Time point", 
+       y = "IFN-l1 IL-29 (pg/mL)")+
+  theme_classic() + 
+  theme(legend.position = c(0.9,0.8))
+
+print("Test de Wilcoxon sur IFN-l1 IL-29")
+for (time_point in vector) {
+  ### Table ###
+  table <- data_fi[data_fi$new_time_point == time_point,]
+  table <- table %>% 
+    reorder_levels(Reponse, order = c( "R", "RP"))
+  ### test stat ###
+  res.wilcox <- table %>%
+    wilcox_test(formula(paste0("IFN_l1_IL_29"," ~ Reponse"))) %>%
+    add_significance()
+
+  ### Visualization ###
+  res.wilcox <- res.wilcox %>% add_xy_position(x = "Reponse")
+  print(ggboxplot(table, 
+                  title = paste0("Wilcoxon test for title IFN in ", time_point),
+                  x = "Reponse", 
+                  y = paste0("IFN_l1_IL_29"), 
+                  ylab = "quantity of IFN (pg/mL)",
+                  xlab = "Groups", 
+                  add = "point",
+                  color = "Reponse",
+                  palette = c("gray50", "#CB2027"),
+                  legend = c(0.9,0.95)) + 
+          stat_pvalue_manual(res.wilcox, tip.length = 0.03, hide.ns = T) +
+          labs(subtitle = get_test_label(res.wilcox, detailed = T)))
+}
+```
+
+## IFN alpha
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = data_fi, 
+       aes(x = new_time_point, 
+           y = `IFN_alpha`, 
+           color = Reponse))+ 
+  geom_boxplot() +
+  geom_point(position = position_dodge(width=0.75)) +
+  scale_color_manual(breaks = c("R", "RP"),
+                     values = c("gray50","#CB2027")) +
+  labs(title = "Wilcoxon test for title IFN alpha", 
+       x = "Time point", 
+       y = "IIFN alpha (pg/mL)")+
+  theme_classic() + 
+  theme(legend.position = c(0.9,0.8))
+
+print("Test de Wilcoxon sur IFN-alpha")
+
+for (time_point in vector) {
+  ### Table ###
+  table <- data_fi[data_fi$new_time_point == time_point,]
+  table <- table %>% 
+    reorder_levels(Reponse, order = c( "R", "RP"))
+  ### test stat ###
+  res.wilcox <- table %>%
+    wilcox_test(formula(paste0("IFN_alpha"," ~ Reponse"))) %>%
+    add_significance()
+  
+  ### Visualization ###
+  res.wilcox <- res.wilcox %>% add_xy_position(x = "Reponse")
+  print(ggboxplot(table, 
+                  title = paste0("Wilcoxon test for title IFN in ", time_point),
+                  x = "Reponse", 
+                  y = paste0("IFN_alpha"), 
+                  ylab = "quantity of IFN (pg/mL)",
+                  xlab = "Groups", 
+                  add = "point",
+                  color = "Reponse",
+                  palette = c("gray50", "#CB2027"),
+                  legend = c(0.9,0.95)) + 
+          stat_pvalue_manual(res.wilcox, tip.length = 0.03, hide.ns = T) +
+          labs(subtitle = get_test_label(res.wilcox, detailed = T)))
+}
+```
+
+## IFN beta
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = data_fi, 
+       aes(x = new_time_point, 
+           y = `IFN_beta`, 
+           color = Reponse))+ 
+  geom_boxplot() +
+  geom_point(position = position_dodge(width=0.75)) +
+  scale_color_manual(breaks = c("R", "RP"),
+                     values = c("gray50","#CB2027")) +
+  labs(title = "Wilcoxon test for title IFN beta", 
+       x = "Time point", 
+       y = "IIFN beta (pg/mL)")+
+  theme_classic() + 
+  theme(legend.position = c(0.9,0.8))
+
+print("Test de Wilcoxon sur IFN-l1 IL-29")
+
+for (time_point in vector) {
+  ### Table ###
+  table <- data_fi[data_fi$new_time_point == time_point,]
+  table <- table %>% 
+    reorder_levels(Reponse, order = c( "R", "RP"))
+  ### test stat ###
+  res.wilcox <- table %>%
+    wilcox_test(formula(paste0("IFN_beta"," ~ Reponse"))) %>%
+    add_significance()
+  
+  ### Visualization ###
+  res.wilcox <- res.wilcox %>% add_xy_position(x = "Reponse")
+  print(ggboxplot(table, 
+                  title = paste0("Wilcoxon test for title IFN in ", time_point),
+                  x = "Reponse", 
+                  y = paste0("IFN_beta"), 
+                  ylab = "quantity of IFN (pg/mL)",
+                  xlab = "Groups", 
+                  add = "point",
+                  color = "Reponse",
+                  palette = c("gray50", "#CB2027"),
+                  legend = c(0.9,0.95)) + 
+          stat_pvalue_manual(res.wilcox, tip.length = 0.03, hide.ns = T) +
+          labs(subtitle = get_test_label(res.wilcox, detailed = T)))
+}
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+sessionInfo()
+```

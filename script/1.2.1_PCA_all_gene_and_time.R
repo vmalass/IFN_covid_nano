@@ -36,24 +36,21 @@ fviz_pca_var(PCA,
   ggtitle(label = "Contribution des variables dans les PC1 et PC2") +
   theme_minimal()
 
-ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, color = real_time_point)) + # , shape = REPONSE, label = label
-  geom_point(size = 5) + 
-  # scale_shape()+
-  # geom_text_repel(show.legend = F,
-  #                 max.overlaps  = Inf, 
-  #                 size = 5)	+
-  scale_color_manual(breaks = c("VT1","VT2","VT3","VT4", "T"),
-                     values = c("darkorange","cornflowerblue", "#DDCC77" ,"brown3", "chartreuse4"))+
-  # scale_color_manual(breaks = c("NR", "NR-", "R", "RP-", "RP", "T", "A"),
-  #                    values = c("darkorange", "#DDCC77","cornflowerblue",
-  #                               "#882255" ,"brown3", "chartreuse4", "#BBBBBB")) +
-  labs(title="PCA :  all gene and all time-point",
+ggplot(mergeMetaAPC, aes(x = PC1, y = PC2, color = real_time_point, shape = real_time_point)) + # , shape = REPONSE, label = label
+  geom_point(size = 1.5 ) + 
+  scale_shape()+
+  scale_color_manual(name = "Time point",
+                     breaks = c("VT1","VT2","VT3","VT4", "T"),
+                     values = c("#d1ab75","#758bd1", "#8fd175" ,"#BBBBBB", "#CC3311"))+
+  scale_shape_manual(name = "Time point",
+                     breaks = c("VT1","VT2","VT3","VT4", "T"),
+                     values = c(19,19, 19, 19, 17))+
+  labs(title="PCA :  all genes and all time-points",
+       col = "Time point",
        x = "PC1 : 27,8%",
-       y = "PC2 : 14,9%") + 
-  theme(plot.title = element_text(size=30),
-        axis.title = element_text(size = 24),
-        legend.title = element_text(size=20),
-        legend.text = element_text(size=20))
+       y = "PC2 : 14,9%") +
+  theme_classic() +
+    theme(legend.position = c(0.9,0.2))  # export PDF 5x7.5 inche
 
 
 

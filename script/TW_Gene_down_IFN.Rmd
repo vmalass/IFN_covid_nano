@@ -1,0 +1,62 @@
+---
+title: "Gene cov TW down IFN"
+author: "Malassigne_Victor"
+date: "6/4/2023"
+output: 
+  html_document:
+    number_sections: true
+    toc: yes
+    toc_depth: 3
+---
+
+Gene qui down la réponse IFN by TW
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyverse)
+library(openxlsx)
+library(ggpubr)
+library(rstatix)
+library(cowplot)
+library(readxl)
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+load("~/Documents/JM/NanoString/IFN_covid_nano/data/1.4_mat_pat_clean_FIGURE.rds") #ouverture de la svg
+```
+
+
+# Genes signature TW
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+T_F <- mat_pat_clean$REPONSE %in% "REA"
+mat_pat_clean_sans_REA <- mat_pat_clean[T_F == F,]
+
+T_F <- mat_pat_clean_sans_REA$REPONSE %in% "A"
+mat_pat_clean_sans_REA <- mat_pat_clean_sans_REA[T_F == F,]
+a <- data.frame(colnames(mat_pat_clean_sans_REA))
+
+T_F <- colnames(mat_pat_clean_sans_REA) %in% c("SOCS1", "SOCS3", "PTPN4", "PTPN6", "ISG15")
+mat_macro <- mat_pat_clean_sans_REA[, T_F == T]
+
+mat_macro <- cbind(mat_macro, mat_pat_clean_sans_REA[,736 : 743])
+
+T_F <- mat_macro$REPONSE %in% "Other"
+mat_macro <- mat_macro[T_F == F, ]
+
+
+ggplot(mat_macro, aes(x = REPONSE, y = SOCS1, fill = real_time_point)) +
+  geom_violin() 
+  
+  ggplot(mat_macro, aes(x = REPONSE, y = SOCS3, fill = real_time_point)) +
+  geom_violin() 
+  
+  ggplot(mat_macro, aes(x = REPONSE, y = PTPN4, fill = real_time_point)) +
+  geom_violin() 
+  
+  ggplot(mat_macro, aes(x = REPONSE, y = PTPN6, fill = real_time_point)) +
+  geom_violin() 
+  
+  ggplot(mat_macro, aes(x = REPONSE, y = ISG15, fill = real_time_point)) +
+  geom_violin()
+```

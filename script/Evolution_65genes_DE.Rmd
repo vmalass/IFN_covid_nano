@@ -1,0 +1,54 @@
+---
+title: "Evolution des genes du DE VT1vsT"
+author: "Malassigne_Victor"
+date: "7/7/2023"
+output: 
+  html_document:
+    number_sections: true
+    toc: yes
+    toc_depth: 3
+---
+Evolution à VT1-2-3-4 des 65 gènes du DE VT1vsT
+# library
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyverse)
+library(openxlsx)
+library(ggpubr)
+library(rstatix)
+library(cowplot)
+library(readxl)
+```
+
+# Import
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+rm(list = ls())
+load("~/Documents/JM/NanoString/IFN_covid_nano/data/1.5_mat_pat_clean_FIGURE_R_RP_NC.rds") #ouverture de la svg
+gene_DE_VT1_T <- read.table("~/Documents/JM/NanoString/IFN_covid_nano/data/gene_DE_VT1_T_all_gene_mat1.3.txt")
+
+T_F <- mat_pat_clean$REPONSE %in% c("T", "R", "RP")
+data <- mat_pat_clean[T_F == T,]
+
+metadata <- data[,737:743]
+
+T_F <- colnames(data) %in% gene_DE_VT1_T$name_VT1_T_all_gene
+data_DE <- data[,T_F == T]
+
+data_fi <- cbind(metadata, data_DE)
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+vector <- gene_DE_VT1_T$name_VT1_T_all_gene
+
+for (gene in 8:length(data_fi)) { 
+  print(names(data_fi[gene]))
+  p <- ggplot(data_fi, aes(x = REPONSE, y = data_fi[[gene]], fill = real_time_point)) +
+          geom_violin() +
+    labs(title = names(data_fi[gene]),
+         y = paste0("Counts ", names(data_fi[gene])))
+  print(p)
+}
+
+```
+

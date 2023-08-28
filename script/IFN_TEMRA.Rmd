@@ -1,0 +1,207 @@
+---
+title: "IFN_TEMRA"
+author: "Malassigne_Victor"
+date: "5/31/2023"
+output: 
+  html_document:
+    number_sections: true
+    toc: yes
+    toc_depth: 3
+---
+# Titre IFN vs TEMRA cytométrie
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyverse)
+library(openxlsx)
+library(ggpubr)
+library(rstatix)
+library(cowplot)
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+data_V1 <- read.xlsx("~/Documents/JM/NanoString/IFN_covid_nano/data/IFN_TEMRA.xlsx", sheet = 1)
+data_V4 <- read.xlsx("~/Documents/JM/NanoString/IFN_covid_nano/data/IFN_TEMRA.xlsx", sheet = 2)
+IFN <- read.xlsx("~/Documents/JM/NanoString/IFN_covid_nano/data/IFN_titre.xlsx", sheet = 2)
+
+data_V1 <- na.omit(data_V1)
+data_V4 <- na.omit(data_V4)
+
+data_V1[12:15] <- sapply(data_V1[12:15], as.numeric)
+data_V4[12:16] <- sapply(data_V4[12:16], as.numeric)
+```
+
+## V1
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+for (i in 12:ncol(data_V1)) {
+  ### Test cor ###
+  test_cor <- cor.test(data_V1[,i], data_V1$IFN, method= "pearson")
+  options( "digits"=3)
+
+  ### Visualization ###
+  print(ggplot(data = data_V1, 
+         aes(x = data_V1[,i], 
+             y = IFN, 
+             color = Reponse, 
+             group = numero_patient_victor))+ 
+    geom_point(size = 4) +
+    scale_color_manual(breaks = c("R", "RP"),
+                       values = c("cornflowerblue","brown3")) + 
+    labs(title = "IFN vs TEMRA V1", x = names(data_V1[i])) +
+    theme_bw() +
+    annotate(geom="text", 
+           x=5, 
+           y=1250, 
+           label= paste0("cor ",round(test_cor$estimate, 2), " pvalue ", signif(test_cor$p.value, 3)),
+           color="grey55",
+           size = 6))
+}
+```
+
+## V4
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+for (i in 12:ncol(data_V4)) {
+  ### Test cor ###
+  test_cor <- cor.test(data_V4[,i], data_V4$IFN, method= "pearson")
+  options( "digits"=3)
+
+  ### Visualization ###
+  print(ggplot(data = data_V4, 
+               aes(x = data_V4[,i], 
+                   y = IFN, 
+                   color = Reponse, 
+                   group = numero_patient_victor))+ 
+          geom_point(size = 4) +
+          scale_color_manual(breaks = c("R", "RP"),
+                             values = c("cornflowerblue","brown3")) +
+          labs(title = "IFN vs TEMRA V4", x = names(data_V4[i])) +
+    theme_bw() +
+    annotate(geom="text", 
+           x=5, 
+           y=150, 
+           label= paste0("cor ",round(test_cor$estimate, 2), " pvalue ", signif(test_cor$p.value, 3)),
+           color="grey55",
+           size = 6))
+}
+```
+
+
+# PC1 vs titre IFN
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# gene_DE_T_R <- read.table("data/PC1_VT1_gene_DE_TvsR_mat1.3.txt")
+gene_DE_VT1_T_VT1 <- read.table("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT1_gene_DE_VT1vsT_mat1.3.txt")
+# PC1_VT1_IFN_geneset <- read.table("data/PC1_VT1_IFN_geneset_mat1.3.txt")
+
+gene_DE_VT1_T_VT2 <- read.table("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT2_gene_DE_VT1vsT_mat1.3.txt")
+# PC1_VT2_IFN_geneset <- read.table("data/PC1_VT2_IFN_geneset_mat1.3.txt")
+
+PC1_VT_gene_DE_VT1vsT <- read.table("/Users/victor/Documents/JM/NanoString/IFN_covid_nano/data/PC1_VT_gene_DE_VT1vsT_mat1.3.txt")
+# PC1_VT_IFN_geneset <- read.table("data/PC1_VT_IFN_geneset_mat1.3.txt")
+```
+
+## V1 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+data_fi_V1 <- inner_join(gene_DE_VT1_T_VT1, data_V1, by = c("numero_patient" = "numero_patient_victor", 
+                                                            "REPONSE"="response",
+                                                            "real_time_point"="new_time_point",
+                                                            "jours_prelevement"="jours_prelevement"))
+
+test_cor <- cor.test(data_fi_V1$SelectPCA.PC1, data_fi_V1$IFN, method= "pearson")
+options( "digits"=3)
+
+ggplot(data = data_fi_V1, 
+               aes(x = SelectPCA.PC1, 
+                   y = IFN, 
+                   color = REPONSE, 
+                   group = numero_patient))+ 
+          geom_point(size = 4) +
+          scale_color_manual(breaks = c("R", "RP"),
+                             values = c("cornflowerblue","brown3")) +
+          # labs(title = "IFN vs TEMRA V4", x = names(data_V4[i])) +
+          theme_bw() +
+  annotate(geom="text", 
+           x=5, 
+           y=1250, 
+           label= paste0("cor ",round(test_cor$estimate, 2), " pvalue ", signif(test_cor$p.value, 3)),
+           color="grey55",
+           size = 6)
+```
+
+## all data R RP IFN PC1
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+data_fi_all <- inner_join(PC1_VT_gene_DE_VT1vsT, IFN, by = c("numero_patient" = "numero_patient_victor", 
+                                                            "REPONSE"="Reponse",
+                                                            "real_time_point"="new_time_point"))
+
+T_F <- data_fi_all$IFN %in% "X"
+data_fi_all <- data_fi_all[T_F == F,]
+
+data_fi_all$IFN <- as.numeric(data_fi_all$IFN)
+
+test_cor <- cor.test(data_fi_all$SelectPCA.PC1, data_fi_all$IFN, method= "pearson")
+options( "digits"=3)
+
+ggplot(data = data_fi_all, 
+               aes(x = SelectPCA.PC1, 
+                   y = IFN, 
+                   color = REPONSE, 
+                   group = numero_patient, 
+                   shape = real_time_point))+ 
+          geom_point(size = 2) +
+  scale_color_manual(breaks = c("NR", "NR-", "R", "RP-", "RP", "T", "A"),
+                     values = c("darkorange", "#DDCC77","cornflowerblue",
+                                "#882255" ,"brown3", "chartreuse4", "#BBBBBB")) + 
+          labs(title = "IFN vs PC1 a partir de tous les prélèvements R et RP",
+               x = "PC1_gene_DE_VT1vsT") +
+          theme_bw() +
+  annotate(geom="text", 
+           x=10, 
+           y=1250, 
+           label= paste0("cor ",round(test_cor$estimate, 2), " pvalue ", signif(test_cor$p.value, 3)),
+           color="grey55",
+           size = 6)
+```
+
+## all data IFN PC1
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+data_fi_all <- inner_join(PC1_VT_gene_DE_VT1vsT, IFN, by = c("numero_patient" = "numero_patient_victor", 
+                                                            "real_time_point"="new_time_point"))
+
+T_F <- data_fi_all$IFN %in% "X"
+data_fi_all <- data_fi_all[T_F == F,]
+
+data_fi_all$IFN <- as.numeric(data_fi_all$IFN)
+
+test_cor <- cor.test(data_fi_all$SelectPCA.PC1, data_fi_all$IFN, method= "pearson")
+options( "digits"=3)
+
+ggplot(data = data_fi_all, 
+               aes(x = SelectPCA.PC1, 
+                   y = IFN, 
+                   color = Reponse, 
+                   group = numero_patient, 
+                   shape = real_time_point))+ 
+          geom_point(size = 2) +
+  scale_color_manual(breaks = c("NR", "NR-", "R", "RP-", "RP", "T", "A"),
+                     values = c("darkorange", "#DDCC77","cornflowerblue",
+                                "#882255" ,"brown3", "chartreuse4", "#BBBBBB")) + 
+          labs(title = "IFN vs PC1 a partir de tous les prélèvements",
+               x = "PC1_gene_DE_VT1vsT") +
+          theme_bw() +
+  annotate(geom="text", 
+           x=10, 
+           y=1250, 
+           label= paste0("cor ",round(test_cor$estimate, 2), " pvalue ", signif(test_cor$p.value, 3)),
+           color="grey55",
+           size = 6)
+```
+
+
+
+
+
+
+
+
+
+

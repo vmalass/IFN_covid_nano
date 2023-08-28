@@ -1,0 +1,121 @@
+
+library(ggrepel)
+library(pheatmap)
+
+rm(list = ls())
+load("~/Documents/JM/NanoString/IFN_covid_nano/data/1.5_mat_pat_clean_FIGURE_R_RP_NC.rds") #ouverture de la svg
+T_F <- mat_pat_clean$REPONSE %in% c("T", "R", "RP")
+data <- mat_pat_clean[T_F == T,]
+
+metadata <- data[,737:743]
+T_F <- colnames(data) %in% c("IFNG", "IFNGR2")
+data_DE <- data[,T_F == T]
+
+data_fi <- cbind(metadata, data_DE)
+
+# Creation de table avec tous les genes IL et IFN-------------------------------
+genes <- as.data.frame(names(data))
+
+genes_IL <- filter(genes, grepl("^IL", `names(data)`))
+genes_IFN <- filter(genes, grepl("^IFN", `names(data)`))
+
+T_F <- colnames(data) %in% genes_IL$`names(data)`
+data_IL <- data[,T_F == T]
+data_IL <- cbind(metadata, data_IL)
+
+for (gene in 8:length(data_IL)) { 
+  print(names(data_IL[gene]))
+  p <- ggplot(data_IL, aes(x = REPONSE, y = data_IL[[gene]], fill = real_time_point)) +
+    geom_violin() +
+    labs(title = names(data_IL[gene]),
+         y = paste0("Counts ", names(data_IL[gene])))
+  # print(p)
+}
+
+T_F <- colnames(data) %in% genes_IFN$`names(data)`
+data_IFN <- data[,T_F == T]
+data_IFN <- cbind(metadata, data_IFN)
+
+for (gene in 8:length(data_IFN)) { 
+  print(names(data_IFN[gene]))
+  p <- ggplot(data_IFN, aes(x = REPONSE, y = data_IFN[[gene]], fill = real_time_point)) +
+    geom_violin() +
+    labs(title = names(data_IFN[gene]),
+         y = paste0("Counts ", names(data_IFN[gene])))
+  # print(p)
+}
+
+### IFN ###
+dat <- log1p(t(data_IFN[,8:20])) # passage en log 1 p pour les heatmap
+coldata <- as.data.frame(data_IFN$REPONSE, row.names = rownames(data_IFN))
+coldata <- cbind(coldata, data_IFN$real_time_point)
+colnames(coldata) <- "REPONSE"
+annC <- data.frame(condition= coldata) # pour les annotation en col pour la heatmap
+annC <- dplyr::rename(annC, "groups" = "condition.REPONSE", "time" = "condition.NA")
+all(rownames(annC) == colnames(dat))  # pour les annotation en col pour la heatmap
+
+coldata_num <- data_IFN$numero_patient
+my_palette <-  colorRampPalette(c("royalblue4", "lightskyblue3", "white", "lightsalmon3","darkred"))(n = 256)
+my_colour <- list(time = c(`T` = "chartreuse4",
+                           VT1 = "#BF616AFF",
+                           VT2 = "#D08770FF",
+                           VT3 = "#EBCB8BFF",
+                           VT4 = "#B48EADFF"),
+                  groups = c(R = "gray50",
+                             RP = "#CB2027",
+                             `T` = "chartreuse4"))
+
+pheatmap(dat, 
+         scale="row", 
+         fontsize_row=10, 
+         fontsize_col = 7, 
+         fontsize = 10, 
+         annotation_colors = my_colour,  #, Other = "#BBBBBB"
+         annotation_col = annC,
+         color = my_palette, 
+         cutree_rows = 2,
+         cutree_cols = 2,
+         main = "IFN genes expressions", 
+         labels_col = coldata_num,
+         cluster_cols = F,
+         cluster_rows = T,
+         border_color = "gray50",
+         angle_col = 315)
+### IL ###
+
+dat <- log1p(t(data_IL[,8:69])) # passage en log 1 p pour les heatmap
+coldata <- as.data.frame(data_IL$REPONSE, row.names = rownames(data_IL))
+coldata <- cbind(coldata, data_IL$real_time_point)
+colnames(coldata) <- "REPONSE"
+annC <- data.frame(condition= coldata) # pour les annotation en col pour la heatmap
+annC <- dplyr::rename(annC, "groups" = "condition.REPONSE", "time" = "condition.NA")
+all(rownames(annC) == colnames(dat))  # pour les annotation en col pour la heatmap
+
+coldata_num <- data_IL$numero_patient
+my_palette <-  colorRampPalette(c("royalblue4", "lightskyblue3", "white", "lightsalmon3","darkred"))(n = 256)
+my_colour <- list(time = c(`T` = "chartreuse4",
+                           VT1 = "#BF616AFF",
+                           VT2 = "#D08770FF",
+                           VT3 = "#EBCB8BFF",
+                           VT4 = "#B48EADFF"),
+                  groups = c(R = "gray50",
+                             RP = "#CB2027",
+                             `T` = "chartreuse4"))
+
+pheatmap(dat, 
+         scale="row", 
+         fontsize_row=10, 
+         fontsize_col = 7, 
+         fontsize = 10, 
+         annotation_colors = my_colour,  #, Other = "#BBBBBB"
+         annotation_col = annC,
+         color = my_palette, 
+         cutree_rows = 2,
+         cutree_cols = 2,
+         main = "IL genes expressions", 
+         labels_col = coldata_num,
+         cluster_cols = F,
+         cluster_rows = T,
+         border_color = "gray50",
+         angle_col = 315)
+
